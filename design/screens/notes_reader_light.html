@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "secondary-container": "#5bb8fe", "inverse-surface": "#283044", "on-surface": "#131b2e", "primary-fixed-dim": "#b8c4ff", "on-tertiary-container": "#ffa85d", "secondary-fixed-dim": "#93ccff", "secondary-fixed": "#cce5ff", "tertiary": "#532a00", "outline": "#757684", "on-secondary-container": "#00476e", "surface-container-high": "#e2e7ff", "secondary": "#006398", "on-error": "#ffffff", "primary-container": "#1e40af", "surface-container-low": "#f2f3ff", "outline-variant": "#c4c5d5", "primary": "#00288e", "surface-variant": "#dae2fd", "on-tertiary-fixed-variant": "#6e3900", "tertiary-fixed-dim": "#ffb77d", "error-container": "#ffdad6", "inverse-primary": "#b8c4ff", "on-background": "#131b2e", "on-tertiary": "#ffffff", "on-secondary-fixed-variant": "#004b73", "primary-fixed": "#dde1ff", "surface-container-highest": "#dae2fd", "on-primary": "#ffffff", "on-surface-variant": "#444653", "on-primary-fixed": "#001453", "tertiary-fixed": "#ffdcc3", "inverse-on-surface": "#eef0ff", "error": "#ba1a1a", "on-secondary-fixed": "#001d31", "surface-bright": "#faf8ff", "on-error-container": "#93000a", "on-primary-fixed-variant": "#173bab", "surface-container": "#eaedff", "tertiary-container": "#743d00", "surface-container-lowest": "#ffffff", "surface-tint": "#3755c3", "surface": "#faf8ff", "background": "#faf8ff", "on-secondary": "#ffffff", "on-primary-container": "#a8b8ff", "on-tertiary-fixed": "#2f1500", "surface-dim": "#d2d9f4" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "space-2xl": "2rem", "margin-mobile": "1rem", "space-xs": "0.25rem", "space-base": "1rem", "space-sm": "0.5rem", "margin-tablet": "1.5rem", "gutter-mobile": "1rem", "space-xl": "1.5rem", "space-md": "0.75rem", "space-lg": "1.25rem", "gutter-tablet": "1.25rem", "space-xxs": "0.125rem" }, "fontFamily": { "formula-lg": ["JetBrains Mono"], "headline-md": ["Inter"], "headline-sm": ["Inter"], "label-md": ["Inter"], "body-md": ["Inter"], "headline-lg": ["Inter"], "label-sm": ["Inter"], "body-sm": ["Inter"], "headline-lg-mobile": ["Inter"], "body-lg": ["Inter"], "formula-md": ["JetBrains Mono"] }, "fontSize": { "formula-lg": ["16px", { "lineHeight": "26px", "fontWeight": "500" }], "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }], "headline-sm": ["16px", { "lineHeight": "24px", "fontWeight": "600" }], "label-md": ["12px", { "lineHeight": "16px", "fontWeight": "600" }], "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }], "headline-lg": ["30px", { "lineHeight": "38px", "fontWeight": "700" }], "label-sm": ["11px", { "lineHeight": "14px", "fontWeight": "500" }], "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }], "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }], "body-lg": ["16px", { "lineHeight": "26px", "fontWeight": "400" }], "formula-md": ["13px", { "lineHeight": "20px", "fontWeight": "500" }] } } } };</script><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface font-body-md text-on-surface flex flex-col min-h-screen"><header class="fixed top-0 inset-x-0 z-50 bg-surface/95 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] pt-safe"><div class="h-16 px-margin-mobile flex items-center justify-between gap-space-sm"><div class="flex items-center gap-space-xs min-w-0"><button aria-label="Go Back" class="w-11 h-11 flex items-center justify-center text-on-surface hover:text-primary transition-colors shrink-0" onclick="history.back()"><span class="material-symbols-outlined text-[22px]">arrow_back</span></button><img alt="Kedar's Chemistry Logo" class="h-7 w-auto object-contain shrink-0" src="https://lh3.googleusercontent.com/aida/AEtjO1Uybbd0LODsJxSPXtHikIXjfAzNZNAwlMfwT-V94FtntNw4Tq3kAMq4U6izpPNAHflwdDTG0nevKxiYAcWQo0CjpcGL4nHuZuJKuxYbTgNu2dk4wXIc8Ih9W_DifLyHsXe_KI0fEGfaDfkofgcY7eRqno9jk_usxaWfk2yLQF-kzT8UEIqJbiE0FbacwsNNDec7bNTumoGfPzZVBRegXhb70pOyqaxZnK1nrDUbk7iXxe1IMI-XtSG5Rg"/><h1 class="font-headline-sm text-headline-sm font-semibold text-on-surface truncate min-w-0">Chapter Concept Detail</h1></div><div class="flex items-center gap-space-xs shrink-0"><button aria-label="Bookmark Concept" class="w-11 h-11 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-[20px]">bookmark_border</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center ml-1"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex flex-col relative w-full pt-16 pb-safe bg-surface min-h-screen"><div class="flex flex-col w-full">
+<!-- Reader Control Strip -->
+<div class="sticky top-16 z-30 bg-surface-container-lowest shadow-sm px-margin-mobile py-space-sm flex flex-col gap-space-xs">
+<div class="flex items-center justify-between gap-space-xs">
+<div class="flex items-center gap-space-xs min-w-0">
+<span class="bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm px-space-xs py-space-xxs rounded">Physical Chemistry • Ch 2</span>
+<span class="bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm px-space-xs py-space-xxs rounded font-semibold">JEE High Yield</span>
+</div>
+<!-- Interactive Reader Controls -->
+<div class="flex items-center gap-1 shrink-0">
+<!-- Font Zoomer -->
+<div class="flex items-center bg-surface-container rounded p-0.5">
+<button aria-label="Decrease Font Size" class="w-7 h-7 flex items-center justify-center text-on-surface font-label-md text-label-md hover:bg-surface-container-highest rounded" id="font-decrease" title="Decrease Font Size">A-</button>
+<div class="w-px h-3.5 bg-outline-variant"></div>
+<button aria-label="Increase Font Size" class="w-7 h-7 flex items-center justify-center text-on-surface font-label-md text-label-md hover:bg-surface-container-highest rounded" id="font-increase" title="Increase Font Size">A+</button>
+</div>
+<!-- Highlight Mode Button -->
+<button aria-label="Toggle Highlight Mode" class="w-8 h-8 rounded flex items-center justify-center bg-surface-container text-on-surface-variant hover:text-primary transition-colors" id="highlighter-btn" title="Toggle Highlight Mode">
+<span class="material-symbols-outlined text-[18px]">brush</span>
+</button>
+<!-- Quick Theme Switch Pill -->
+<button aria-label="Switch Tone" class="flex items-center gap-1 bg-surface-container px-2 h-8 rounded text-on-surface-variant text-label-sm font-label-sm" id="theme-toggle">
+<span class="material-symbols-outlined text-[16px] text-tertiary">light_mode</span>
+<span class="hidden sm:inline">Theme</span>
+</button>
+</div>
+</div>
+<!-- Reading Progress Indicator -->
+<div class="w-full bg-surface-container rounded-full h-1 overflow-hidden">
+<div class="bg-primary h-full w-1/4 transition-all duration-150" id="read-progress"></div>
+</div>
+</div>
+<!-- Main Notes Body Container -->
+<div class="px-margin-mobile py-space-base flex flex-col gap-space-lg max-w-2xl mx-auto w-full" id="notes-content-stream">
+<!-- Section Heading & Meta -->
+<div class="flex flex-col gap-space-xxs">
+<div class="flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">timer</span>
+<span>6 min revision read</span>
+<span>•</span>
+<span>NCERT Sec 2.4</span>
+</div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary font-bold tracking-tight">
+        1. Raoult's Law for Volatile Solutes
+      </h2>
+</div>
+<!-- Core Law Definition Box -->
+<div class="bg-surface-container-low rounded p-space-md shadow-sm relative overflow-hidden flex flex-col gap-space-xs">
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-secondary"></div>
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-[20px]">science</span>
+<span class="font-headline-sm text-headline-sm text-secondary font-bold">Standard Statement</span>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface leading-relaxed pl-space-xs">
+        "For a solution of volatile liquids, the partial vapour pressure of each component in the solution is directly proportional to its mole fraction present in that solution."
+      </p>
+</div>
+<!-- Crisp Mathematical & Reaction typesetting Block -->
+<div class="bg-surface-container-lowest rounded p-space-md shadow-sm flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Governing Formulation</span>
+<span class="bg-surface-container text-on-surface-variant font-label-sm text-label-sm px-2 py-0.5 rounded">Binary Mix</span>
+</div>
+<div class="bg-surface-container-low rounded p-space-md flex flex-col gap-space-sm overflow-x-auto">
+<div class="flex items-center justify-between flex-wrap gap-space-xs font-formula-lg text-formula-lg text-primary">
+<div class="flex items-center gap-2">
+<span>p₁ = x₁ · p₁°</span>
+</div>
+<span class="text-on-surface-variant text-label-sm font-label-sm">Component 1</span>
+</div>
+<div class="flex items-center justify-between flex-wrap gap-space-xs font-formula-lg text-formula-lg text-primary">
+<div class="flex items-center gap-2">
+<span>p₂ = x₂ · p₂°</span>
+</div>
+<span class="text-on-surface-variant text-label-sm font-label-sm">Component 2</span>
+</div>
+</div>
+<div class="bg-primary text-on-primary rounded p-space-md flex flex-col gap-space-xxs">
+<span class="font-label-sm text-label-sm text-primary-fixed">Dalton's Total Pressure Law Expression</span>
+<div class="font-formula-lg text-formula-lg tracking-wide overflow-x-auto py-1">
+          p<sub class="text-[12px]">total</sub> = p₁ + p₂ = (p₁° - p₂°)x₁ + p₂°
+        </div>
+</div>
+<div class="flex items-start gap-space-xs text-on-surface-variant font-body-sm text-body-sm pt-1">
+<span class="material-symbols-outlined text-[16px] shrink-0 mt-0.5 text-secondary">info</span>
+<span>Where <b>p₁°</b> and <b>p₂°</b> denote vapour pressures of pure components 1 &amp; 2 respectively at given temperature <b>T</b>.</span>
+</div>
+</div>
+<!-- Vector Chart: Ideal Solution Graph Description -->
+<div class="bg-surface-container-lowest rounded p-space-md shadow-sm flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[20px]">show_chart</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Vapour Pressure vs Mole Fraction</h3>
+</div>
+<span class="bg-surface-container text-on-surface font-label-sm text-label-sm px-1.5 py-0.5 rounded">T = Const</span>
+</div>
+<!-- Compact Inline SVG Graph optimized for 0 GPU drain -->
+<div class="bg-surface-container-low rounded p-2 flex flex-col items-center">
+<svg aria-label="Ideal Solution Vapour Pressure Graph" class="w-full h-auto max-h-52 select-none text-on-surface" viewbox="0 0 320 180">
+<!-- Graph Bounds Frame -->
+<rect class="text-outline-variant" fill="none" height="125" stroke="currentColor" stroke-width="1.25" width="250" x="35" y="20"></rect>
+<!-- Dashed Guides -->
+<line class="text-outline-variant opacity-60" stroke="currentColor" stroke-dasharray="3,3" stroke-width="0.8" x1="35" x2="285" y1="95" y2="95"></line>
+<!-- Component 1 Line (p1 = x1 * p1_deg) going down right to left: from (35, 145) to (285, 35) assuming p1° is at right -->
+<!-- Left is x1=0 (p1=0), Right is x1=1 (p1=p1°) -->
+<line stroke="#006398" stroke-width="2" x1="35" x2="285" y1="145" y2="45"></line>
+<!-- Component 2 Line (p2): Left x2=1 (p2=p2°) at (35, 75) to Right x2=0 at (285, 145) -->
+<line stroke="#00288e" stroke-width="2" x1="35" x2="285" y1="75" y2="145"></line>
+<!-- Total Pressure Line: connects (35, 75) to (285, 45) -->
+<line stroke="#532a00" stroke-dasharray="4,2" stroke-width="2.5" x1="35" x2="285" y1="75" y2="45"></line>
+<!-- Nodes and Labels -->
+<circle cx="35" cy="75" fill="#00288e" r="3.5"></circle>
+<text class="font-formula-md text-[10px]" fill="#00288e" font-weight="bold" x="8" y="79">p₂°</text>
+<circle cx="285" cy="45" fill="#006398" r="3.5"></circle>
+<text class="font-formula-md text-[10px]" fill="#006398" font-weight="bold" x="292" y="48">p₁°</text>
+<!-- Label along total line -->
+<text class="font-label-sm text-[10px]" fill="#532a00" font-weight="bold" x="135" y="52">P_total = p₁ + p₂</text>
+<!-- Label along p1 line -->
+<text class="font-label-sm text-[9px]" fill="#006398" x="195" y="98">p₁ = x₁·p₁°</text>
+<!-- Label along p2 line -->
+<text class="font-label-sm text-[9px]" fill="#00288e" x="70" y="118">p₂ = x₂·p₂°</text>
+<!-- Bottom Axis Coordinates -->
+<text class="font-label-sm text-[9px]" fill="currentColor" x="32" y="160">x₁=0</text>
+<text class="font-label-sm text-[9px]" fill="currentColor" x="32" y="172">x₂=1</text>
+<text class="font-label-sm text-[10px]" fill="currentColor" font-weight="bold" x="130" y="166">Mole Fraction (x) ➔</text>
+<text class="font-label-sm text-[9px]" fill="currentColor" x="268" y="160">x₁=1</text>
+<text class="font-label-sm text-[9px]" fill="currentColor" x="268" y="172">x₂=0</text>
+</svg>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+        Linearity across the composition spectrum validates Raoult's law for ideal solutions obeying ΔH<sub class="text-[10px]">mix</sub> = 0 and ΔV<sub class="text-[10px]">mix</sub> = 0.
+      </p>
+</div>
+<!-- Colligative Properties High-Yield Card Grid -->
+<div class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[20px]">bolt</span>
+<span>Colligative Properties Summary</span>
+</h3>
+<span class="bg-secondary-container text-on-secondary-container font-label-sm text-label-sm px-2 py-0.5 rounded font-semibold">4 High Yield Equations</span>
+</div>
+<!-- Interactive Micro-Formula Tiles -->
+<div class="grid grid-cols-1 gap-space-sm">
+<!-- Tile 1: Boiling Point -->
+<div class="bg-surface-container-lowest rounded p-space-md shadow-sm flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Elevation in Boiling Point</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Ebullioscopic constant (K<sub class="text-[10px]">b</sub>)</span>
+</div>
+<div class="bg-surface-container-high px-3 py-1.5 rounded font-formula-md text-formula-md text-primary font-bold">
+            ΔT<sub class="text-[10px]">b</sub> = K<sub class="text-[10px]">b</sub> · m
+          </div>
+</div>
+<!-- Tile 2: Freezing Point -->
+<div class="bg-surface-container-lowest rounded p-space-md shadow-sm flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Depression in Freezing Point</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Cryoscopic constant (K<sub class="text-[10px]">f</sub>)</span>
+</div>
+<div class="bg-surface-container-high px-3 py-1.5 rounded font-formula-md text-formula-md text-primary font-bold">
+            ΔT<sub class="text-[10px]">f</sub> = K<sub class="text-[10px]">f</sub> · m
+          </div>
+</div>
+<!-- Tile 3: Osmotic Pressure -->
+<div class="bg-surface-container-lowest rounded p-space-md shadow-sm flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Osmotic Pressure</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Molar Concentration (C = n/V)</span>
+</div>
+<div class="bg-surface-container-high px-3 py-1.5 rounded font-formula-md text-formula-md text-primary font-bold">
+            π = CRT
+          </div>
+</div>
+</div>
+</div>
+<!-- Van 't Hoff factor (i) Exceptions Box (Amber Accent Warning) -->
+<div class="bg-tertiary-fixed rounded p-space-md shadow-sm flex flex-col gap-space-xs text-on-tertiary-fixed">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs font-headline-sm text-headline-sm font-bold">
+<span class="material-symbols-outlined text-[20px] text-tertiary-container">warning</span>
+<span>Van 't Hoff Factor (i) Alert</span>
+</div>
+<span class="bg-tertiary text-on-tertiary text-label-sm font-label-sm px-2 py-0.5 rounded font-semibold">Exam Pitfall</span>
+</div>
+<p class="font-body-md text-body-md text-on-tertiary-fixed leading-normal">
+        For electrolytes undergoing dissociation (e.g., NaCl, BaCl₂) or association (e.g., Ethanoic Acid in Benzene), multiply colligative formulas by <b>i</b>:
+      </p>
+<div class="bg-surface-container-lowest rounded p-space-sm flex items-center justify-around text-on-surface font-formula-md text-formula-md my-1">
+<span class="text-primary font-bold">ΔT<sub class="text-[10px]">b</sub> = i · K<sub class="text-[10px]">b</sub> · m</span>
+<span class="text-outline-variant">|</span>
+<span class="text-primary font-bold">π = i · CRT</span>
+</div>
+<div class="flex items-center justify-between text-label-sm font-label-sm pt-1">
+<span><b>Dissociation:</b> i = 1 + (n - 1)α &gt; 1</span>
+<span><b>Association:</b> i = 1 + (1/n - 1)α &lt; 1</span>
+</div>
+</div>
+<!-- Quick Revision Check Section -->
+<div class="bg-surface-container-lowest rounded p-space-md shadow-sm flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-secondary font-bold uppercase tracking-wider">Concept Check 2.1</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Instant Check</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface">
+        Which liquid solution pair exhibits a <b>negative deviation</b> from Raoult's Law due to hydrogen bonding?
+      </p>
+<div class="flex flex-col gap-space-xs" id="quiz-options">
+<button class="w-full text-left p-space-sm rounded bg-surface-container hover:bg-surface-container-high transition-colors font-body-sm text-body-sm text-on-surface flex items-center justify-between" onclick="handleOptionSelect(this, false)">
+<span>A. Ethanol and Acetone</span>
+<span class="material-symbols-outlined text-[18px] opacity-40">radio_button_unchecked</span>
+</button>
+<button class="w-full text-left p-space-sm rounded bg-surface-container hover:bg-surface-container-high transition-colors font-body-sm text-body-sm text-on-surface flex items-center justify-between" onclick="handleOptionSelect(this, true)">
+<span>B. Chloroform and Acetone</span>
+<span class="material-symbols-outlined text-[18px] opacity-40">radio_button_unchecked</span>
+</button>
+<button class="w-full text-left p-space-sm rounded bg-surface-container hover:bg-surface-container-high transition-colors font-body-sm text-body-sm text-on-surface flex items-center justify-between" onclick="handleOptionSelect(this, false)">
+<span>C. Benzene and Toluene</span>
+<span class="material-symbols-outlined text-[18px] opacity-40">radio_button_unchecked</span>
+</button>
+</div>
+<div class="hidden p-space-sm rounded font-body-sm text-body-sm" id="quiz-feedback"></div>
+</div>
+<!-- Spacer before bottom action dock -->
+<div class="h-16"></div>
+</div>
+<!-- Bottom Sticky Action Dock (Zero CPU-expensive blurs) -->
+<div class="fixed bottom-0 inset-x-0 bg-surface-container-lowest shadow-md z-40 px-margin-mobile py-space-sm pb-safe flex items-center justify-between gap-space-sm">
+<button aria-pressed="false" class="flex-1 h-11 bg-surface-container hover:bg-surface-container-high text-primary rounded flex items-center justify-center gap-space-xs font-label-md text-label-md transition-colors" id="mastery-toggle-btn">
+<span class="material-symbols-outlined text-[20px]" id="mastery-icon">check_circle</span>
+<span id="mastery-text">Mark as Mastered</span>
+</button>
+<button class="flex-1 h-11 bg-primary text-on-primary rounded flex items-center justify-center gap-space-xs font-label-md text-label-md transition-colors active:opacity-90">
+<span>Abnormal Molar Mass</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<script>
+  // Micro interactions for battery preservation and smooth student experience
+  (function() {
+    // Font zoom adjustment
+    const stream = document.getElementById('notes-content-stream');
+    let currentFontSizeIndex = 1;
+    const sizes = ['scale-95', 'scale-100', 'scale-105'];
+
+    const btnDecrease = document.getElementById('font-decrease');
+    const btnIncrease = document.getElementById('font-increase');
+
+    if (btnDecrease && btnIncrease && stream) {
+      btnDecrease.addEventListener('click', () => {
+        if (currentFontSizeIndex > 0) {
+          stream.classList.remove(sizes[currentFontSizeIndex]);
+          currentFontSizeIndex--;
+          stream.classList.add(sizes[currentFontSizeIndex]);
+        }
+      });
+
+      btnIncrease.addEventListener('click', () => {
+        if (currentFontSizeIndex < sizes.length - 1) {
+          stream.classList.remove(sizes[currentFontSizeIndex]);
+          currentFontSizeIndex++;
+          stream.classList.add(sizes[currentFontSizeIndex]);
+        }
+      });
+    }
+
+    // Highlighter micro-interaction
+    const highlightBtn = document.getElementById('highlighter-btn');
+    let highlightActive = false;
+    if (highlightBtn) {
+      highlightBtn.addEventListener('click', () => {
+        highlightActive = !highlightActive;
+        if (highlightActive) {
+          highlightBtn.classList.add('bg-secondary-container', 'text-on-secondary-container');
+          highlightBtn.classList.remove('bg-surface-container', 'text-on-surface-variant');
+        } else {
+          highlightBtn.classList.remove('bg-secondary-container', 'text-on-secondary-container');
+          highlightBtn.classList.add('bg-surface-container', 'text-on-surface-variant');
+        }
+      });
+    }
+
+    // Scroll reading progress updater
+    window.addEventListener('scroll', () => {
+      const prog = document.getElementById('read-progress');
+      if (!prog) return;
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (totalHeight > 0) {
+        const percentage = Math.min(100, Math.max(10, (window.scrollY / totalHeight) * 100));
+        prog.style.width = percentage + '%';
+      }
+    }, { passive: true });
+
+    // Mastery mark toggle
+    const masteryBtn = document.getElementById('mastery-toggle-btn');
+    const masteryText = document.getElementById('mastery-text');
+    const masteryIcon = document.getElementById('mastery-icon');
+    let isMastered = false;
+
+    if (masteryBtn) {
+      masteryBtn.addEventListener('click', () => {
+        isMastered = !isMastered;
+        if (isMastered) {
+          masteryBtn.classList.add('bg-primary-container', 'text-on-primary');
+          masteryBtn.classList.remove('bg-surface-container', 'text-primary');
+          masteryText.textContent = 'Mastered ✓';
+          masteryIcon.setAttribute('style', "font-variation-settings: 'FILL' 1;");
+        } else {
+          masteryBtn.classList.remove('bg-primary-container', 'text-on-primary');
+          masteryBtn.classList.add('bg-surface-container', 'text-primary');
+          masteryText.textContent = 'Mark as Mastered';
+          masteryIcon.removeAttribute('style');
+        }
+      });
+    }
+
+    // Theme Switch Pill interaction
+    const themeBtn = document.getElementById('theme-toggle');
+    if (themeBtn) {
+      themeBtn.addEventListener('click', () => {
+        document.documentElement.classList.toggle('dark');
+      });
+    }
+  })();
+
+  // Instant practice question feedback
+  function handleOptionSelect(buttonElement, isCorrect) {
+    const parent = document.getElementById('quiz-options');
+    const feedback = document.getElementById('quiz-feedback');
+    if (!parent || !feedback) return;
+
+    // Reset sibling buttons
+    const buttons = parent.querySelectorAll('button');
+    buttons.forEach(btn => {
+      btn.className = "w-full text-left p-space-sm rounded bg-surface-container hover:bg-surface-container-high transition-colors font-body-sm text-body-sm text-on-surface flex items-center justify-between";
+      const icon = btn.querySelector('.material-symbols-outlined');
+      if (icon) icon.textContent = 'radio_button_unchecked';
+    });
+
+    const icon = buttonElement.querySelector('.material-symbols-outlined');
+
+    if (isCorrect) {
+      buttonElement.className = "w-full text-left p-space-sm rounded bg-secondary-fixed text-on-secondary-fixed font-body-sm text-body-sm flex items-center justify-between font-semibold";
+      if (icon) {
+        icon.textContent = 'check_circle';
+        icon.classList.remove('opacity-40');
+      }
+      feedback.className = "p-space-sm rounded font-body-sm text-body-sm bg-secondary-container text-on-secondary-container block";
+      feedback.innerHTML = "<b>Correct!</b> Chloroform and acetone form strong intermolecular hydrogen bonds, lowering vapour pressure (negative deviation).";
+    } else {
+      buttonElement.className = "w-full text-left p-space-sm rounded bg-error-container text-on-error-container font-body-sm text-body-sm flex items-center justify-between";
+      if (icon) {
+        icon.textContent = 'cancel';
+        icon.classList.remove('opacity-40');
+      }
+      feedback.className = "p-space-sm rounded font-body-sm text-body-sm bg-error-container text-on-error-container block";
+      feedback.innerHTML = "<b>Incorrect.</b> Try again. Notice which pair forms strong solute-solvent H-bonds absent in pure components.";
+    }
+  }
+</script></main></body></html>

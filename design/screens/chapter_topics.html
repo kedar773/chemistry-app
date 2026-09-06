@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "secondary-container": "#5bb8fe", "inverse-surface": "#283044", "on-surface": "#131b2e", "primary-fixed-dim": "#b8c4ff", "on-tertiary-container": "#ffa85d", "secondary-fixed-dim": "#93ccff", "secondary-fixed": "#cce5ff", "tertiary": "#532a00", "outline": "#757684", "on-secondary-container": "#00476e", "surface-container-high": "#e2e7ff", "secondary": "#006398", "on-error": "#ffffff", "primary-container": "#1e40af", "surface-container-low": "#f2f3ff", "outline-variant": "#c4c5d5", "primary": "#00288e", "surface-variant": "#dae2fd", "on-tertiary-fixed-variant": "#6e3900", "tertiary-fixed-dim": "#ffb77d", "error-container": "#ffdad6", "inverse-primary": "#b8c4ff", "on-background": "#131b2e", "on-tertiary": "#ffffff", "on-secondary-fixed-variant": "#004b73", "primary-fixed": "#dde1ff", "surface-container-highest": "#dae2fd", "on-primary": "#ffffff", "on-surface-variant": "#444653", "on-primary-fixed": "#001453", "tertiary-fixed": "#ffdcc3", "inverse-on-surface": "#eef0ff", "error": "#ba1a1a", "on-secondary-fixed": "#001d31", "surface-bright": "#faf8ff", "on-error-container": "#93000a", "on-primary-fixed-variant": "#173bab", "surface-container": "#eaedff", "tertiary-container": "#743d00", "surface-container-lowest": "#ffffff", "surface-tint": "#3755c3", "surface": "#faf8ff", "background": "#faf8ff", "on-secondary": "#ffffff", "on-primary-container": "#a8b8ff", "on-tertiary-fixed": "#2f1500", "surface-dim": "#d2d9f4" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "space-2xl": "2rem", "margin-mobile": "1rem", "space-xs": "0.25rem", "space-base": "1rem", "space-sm": "0.5rem", "margin-tablet": "1.5rem", "gutter-mobile": "1rem", "space-xl": "1.5rem", "space-md": "0.75rem", "space-lg": "1.25rem", "gutter-tablet": "1.25rem", "space-xxs": "0.125rem" }, "fontFamily": { "formula-lg": ["JetBrains Mono"], "headline-md": ["Inter"], "headline-sm": ["Inter"], "label-md": ["Inter"], "body-md": ["Inter"], "headline-lg": ["Inter"], "label-sm": ["Inter"], "body-sm": ["Inter"], "headline-lg-mobile": ["Inter"], "body-lg": ["Inter"], "formula-md": ["JetBrains Mono"] }, "fontSize": { "formula-lg": ["16px", { "lineHeight": "26px", "fontWeight": "500" }], "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }], "headline-sm": ["16px", { "lineHeight": "24px", "fontWeight": "600" }], "label-md": ["12px", { "lineHeight": "16px", "fontWeight": "600" }], "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }], "headline-lg": ["30px", { "lineHeight": "38px", "fontWeight": "700" }], "label-sm": ["11px", { "lineHeight": "14px", "fontWeight": "500" }], "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }], "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }], "body-lg": ["16px", { "lineHeight": "26px", "fontWeight": "400" }], "formula-md": ["13px", { "lineHeight": "20px", "fontWeight": "500" }] } } } };</script><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface font-body-md text-on-surface flex flex-col min-h-screen"><header class="fixed top-0 inset-x-0 z-50 bg-surface/95 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] pt-safe"><div class="h-16 px-margin-mobile flex items-center justify-between gap-space-sm"><div class="flex items-center gap-space-sm min-w-0 flex-1"><img alt="Kedar's Chemistry Logo" class="h-8 w-auto object-contain shrink-0" src="https://lh3.googleusercontent.com/aida/AEtjO1Uybbd0LODsJxSPXtHikIXjfAzNZNAwlMfwT-V94FtntNw4Tq3kAMq4U6izpPNAHflwdDTG0nevKxiYAcWQo0CjpcGL4nHuZuJKuxYbTgNu2dk4wXIc8Ih9W_DifLyHsXe_KI0fEGfaDfkofgcY7eRqno9jk_usxaWfk2yLQF-kzT8UEIqJbiE0FbacwsNNDec7bNTumoGfPzZVBRegXhb70pOyqaxZnK1nrDUbk7iXxe1IMI-XtSG5Rg"/><div class="flex flex-col min-w-0"><span class="font-headline-sm text-headline-sm font-bold text-primary truncate leading-none">Kedar's Chemistry</span><span class="font-label-sm text-label-sm text-on-surface-variant truncate mt-0.5">Chapters</span></div></div><div class="flex items-center gap-space-xs shrink-0"><button aria-label="Select Class" class="h-7 px-space-sm rounded-full bg-surface-container-high text-primary font-label-sm text-label-sm flex items-center gap-0.5 min-h-[32px] hover:bg-surface-variant transition-colors"><span>Class 12</span><span class="material-symbols-outlined text-[14px]">arrow_drop_down</span></button><button aria-label="Offline Bookmarks" class="w-11 h-11 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-[20px]">bookmark</span></button><button aria-label="Toggle Light Mode" class="w-11 h-11 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-[20px]">light_mode</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center ml-1"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex flex-col relative w-full pt-16 pb-20 bg-surface min-h-screen"><div class="flex flex-col w-full">
+<!-- Subtle Chapter Context Ribbon -->
+<section class="px-margin-mobile pt-space-md pb-space-sm bg-surface-container-low flex flex-col gap-space-xs">
+<div class="flex items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-semibold">Unit 4 • Physical Chemistry</span>
+</div>
+<div class="flex items-center gap-1 bg-surface-container px-2 py-0.5 rounded-full text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px] text-tertiary-container">analytics</span>
+<span class="font-label-sm text-label-sm">High Priority</span>
+</div>
+</div>
+<div class="flex items-baseline justify-between mt-space-xxs">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface font-bold">Chemical Kinetics</h1>
+<span class="font-formula-md text-formula-md text-primary font-semibold">Ch 04</span>
+</div>
+<!-- Weightage Tag Strip -->
+<div class="flex items-center gap-space-xs overflow-x-auto py-1 no-scrollbar">
+<div class="shrink-0 flex items-center gap-1 bg-surface-container-high px-2.5 py-1 rounded-xl text-primary">
+<span class="material-symbols-outlined text-[14px]">military_tech</span>
+<span class="font-label-sm text-label-sm font-semibold">JEE Main: 1–2 Qs (4–8M)</span>
+</div>
+<div class="shrink-0 flex items-center gap-1 bg-surface-container px-2.5 py-1 rounded-xl text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px]">school</span>
+<span class="font-label-sm text-label-sm">CBSE: 7 Marks</span>
+</div>
+<div class="shrink-0 flex items-center gap-1 bg-surface-container px-2.5 py-1 rounded-xl text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px]">medical_services</span>
+<span class="font-label-sm text-label-sm">NEET: 2 Qs</span>
+</div>
+</div>
+</section>
+<!-- Segmented Categorical Filter Tabs -->
+<section class="px-margin-mobile py-space-sm bg-surface sticky top-16 z-20 shadow-sm">
+<div class="flex items-center gap-space-xs overflow-x-auto py-0.5 no-scrollbar" role="tablist">
+<button aria-selected="true" class="shrink-0 h-9 px-3.5 rounded-xl bg-primary text-on-primary font-label-md text-label-md flex items-center gap-1.5 shadow-sm transition-all" role="tab">
+<span class="material-symbols-outlined text-[16px]">menu_book</span>
+<span>NCERT Notes</span>
+</button>
+<button aria-selected="false" class="shrink-0 h-9 px-3.5 rounded-xl bg-surface-container text-on-surface-variant hover:text-on-surface font-label-md text-label-md flex items-center gap-1.5 transition-colors" role="tab">
+<span class="material-symbols-outlined text-[16px]">functions</span>
+<span>Formula Sheet</span>
+</button>
+<button aria-selected="false" class="shrink-0 h-9 px-3.5 rounded-xl bg-surface-container text-on-surface-variant hover:text-on-surface font-label-md text-label-md flex items-center gap-1.5 transition-colors" role="tab">
+<span class="material-symbols-outlined text-[16px]">swap_horiz</span>
+<span>Mechanisms</span>
+</button>
+<button aria-selected="false" class="shrink-0 h-9 px-3.5 rounded-xl bg-surface-container text-on-surface-variant hover:text-on-surface font-label-md text-label-md flex items-center gap-1.5 transition-colors" role="tab">
+<span class="material-symbols-outlined text-[16px]">history_edu</span>
+<span>PYQs ('19-'24)</span>
+</button>
+</div>
+</section>
+<!-- Progress Overview Micro-Card -->
+<div class="px-margin-mobile pt-space-xs pb-space-sm">
+<div class="bg-surface-container-low rounded-xl p-space-sm flex items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-on-primary-fixed shrink-0">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">pie_chart</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm font-semibold text-on-surface">60% Prepared</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">3 of 5 Master Modules Revised</span>
+</div>
+</div>
+<div class="w-20 bg-surface-container-highest h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 60%"></div>
+</div>
+</div>
+</div>
+<!-- Syllabus Breakdown Accordion Stack -->
+<main class="px-margin-mobile flex flex-col gap-space-sm pb-28">
+<!-- Topic 1: Completed -->
+<article class="topic-item bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden transition-all duration-200">
+<button aria-expanded="false" class="topic-toggle w-full p-space-base flex items-start text-left gap-space-sm focus:outline-none" type="button">
+<div class="w-7 h-7 rounded-full bg-surface-container flex items-center justify-center shrink-0 mt-0.5 text-primary">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<div class="flex items-center justify-between gap-space-xs mb-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Topic 01 • 15 Mins</span>
+<span class="bg-surface-container-high text-primary px-2 py-0.5 rounded-full font-label-sm text-label-sm font-medium">Completed ✓</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-semibold leading-snug">Rate of a Reaction (Average &amp; Instantaneous)</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5 truncate">Slope of tangent, concentration-time graphs, and stoichiometric units.</p>
+</div>
+<span class="material-symbols-outlined topic-chevron text-on-surface-variant text-[20px] shrink-0 mt-1 transition-transform">expand_more</span>
+</button>
+<!-- Expandable Drawer Body -->
+<div class="topic-content hidden px-space-base pb-space-base pt-0 flex flex-col gap-space-sm">
+<div class="bg-surface-container-low rounded-lg p-space-sm flex flex-col gap-space-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium uppercase tracking-wide">Key Formula</span>
+<div class="font-formula-md text-formula-md text-on-surface bg-surface p-space-xs rounded overflow-x-auto no-scrollbar">
+            r<sub>inst</sub> = -d[R]/dt = +d[P]/dt
+          </div>
+</div>
+<div class="flex items-center justify-between pt-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Reviewed yesterday</span>
+<a class="font-label-sm text-label-sm text-primary font-semibold flex items-center gap-0.5" href="#">
+<span>Read Summary</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</a>
+</div>
+</div>
+</article>
+<!-- Topic 2: In Progress -->
+<article class="topic-item bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden transition-all duration-200">
+<button aria-expanded="false" class="topic-toggle w-full p-space-base flex items-start text-left gap-space-sm focus:outline-none" type="button">
+<div class="w-7 h-7 rounded-full bg-secondary-fixed flex items-center justify-center shrink-0 mt-0.5 text-secondary">
+<span class="material-symbols-outlined text-[18px]">timelapse</span>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<div class="flex items-center justify-between gap-space-xs mb-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Topic 02 • 25 Mins</span>
+<span class="bg-secondary-fixed text-on-secondary-fixed-variant px-2 py-0.5 rounded-full font-label-sm text-label-sm font-medium">In Progress 45%</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-semibold leading-snug">Factors Influencing Rate &amp; Rate Law</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5 truncate">Concentration, catalyst action, surface area, and specific reaction constant.</p>
+</div>
+<span class="material-symbols-outlined topic-chevron text-on-surface-variant text-[20px] shrink-0 mt-1 transition-transform">expand_more</span>
+</button>
+<div class="topic-content hidden px-space-base pb-space-base pt-0 flex flex-col gap-space-sm">
+<div class="bg-surface-container-low rounded-lg p-space-sm flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium uppercase tracking-wide">Differential Form</span>
+<span class="font-label-sm text-label-sm text-secondary font-semibold">k depends only on T</span>
+</div>
+<div class="font-formula-md text-formula-md text-on-surface bg-surface p-space-xs rounded overflow-x-auto no-scrollbar">
+            Rate = k [A]<sup>x</sup> [B]<sup>y</sup>
+</div>
+</div>
+<div class="flex items-center justify-between pt-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Section 4.2 in NCERT</span>
+<button class="bg-primary text-on-primary px-3 py-1.5 rounded font-label-sm text-label-sm font-semibold flex items-center gap-1">
+<span>Resume Reading</span>
+<span class="material-symbols-outlined text-[14px]">play_arrow</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Topic 3: High Yield (Open by default) -->
+<article class="topic-item bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden transition-all duration-200">
+<button aria-expanded="true" class="topic-toggle w-full p-space-base flex items-start text-left gap-space-sm focus:outline-none" type="button">
+<div class="w-7 h-7 rounded-full bg-tertiary-fixed flex items-center justify-center shrink-0 mt-0.5 text-on-tertiary-fixed-variant">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<div class="flex items-center justify-between gap-space-xs mb-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Topic 03 • 40 Mins</span>
+<span class="bg-tertiary-fixed text-on-tertiary-fixed-variant px-2 py-0.5 rounded-full font-label-sm text-label-sm font-bold flex items-center gap-0.5">
+<span>High Yield</span>
+<span class="material-symbols-outlined text-[12px]">bolt</span>
+</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-semibold leading-snug">Order &amp; Molecularity (Zero, 1st &amp; 2nd Order)</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5 truncate">Distinction, fractional orders, pseudo-first-order reactions with examples.</p>
+</div>
+<span class="material-symbols-outlined topic-chevron text-on-surface-variant text-[20px] shrink-0 mt-1 transition-transform rotate-180">expand_more</span>
+</button>
+<div class="topic-content px-space-base pb-space-base pt-0 flex flex-col gap-space-sm">
+<div class="bg-surface-container-low rounded-lg p-space-sm flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant font-semibold uppercase tracking-wider">Unit of Rate Constant (k)</span>
+<span class="font-label-sm text-label-sm text-primary">General Trick</span>
+</div>
+<div class="font-formula-md text-formula-md text-on-surface bg-surface p-space-xs rounded overflow-x-auto no-scrollbar">
+            mol<sup>(1 - n)</sup> • L<sup>(n - 1)</sup> • s<sup>-1</sup>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+            • 0th Order: <span class="font-formula-md text-formula-md text-on-surface">mol L⁻¹ s⁻¹</span><br/>
+            • 1st Order: <span class="font-formula-md text-formula-md text-on-surface">s⁻¹</span> (independent of conc.)
+          </p>
+</div>
+<div class="grid grid-cols-2 gap-space-xs mt-0.5">
+<div class="bg-surface-container p-space-xs rounded-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-primary">psychology</span>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm font-semibold truncate">Order</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant truncate">Experimental</span>
+</div>
+</div>
+<div class="bg-surface-container p-space-xs rounded-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-secondary">bubble_chart</span>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm font-semibold truncate">Molecularity</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant truncate">Theoretical (≤ 3)</span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between pt-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant">JEE 2023 &amp; 2022 Asked</span>
+<button class="bg-primary text-on-primary px-3 py-1.5 rounded font-label-sm text-label-sm font-semibold flex items-center gap-1">
+<span>Solve 8 Drills</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Topic 4: Solved PYQs -->
+<article class="topic-item bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden transition-all duration-200">
+<button aria-expanded="false" class="topic-toggle w-full p-space-base flex items-start text-left gap-space-sm focus:outline-none" type="button">
+<div class="w-7 h-7 rounded-full bg-surface-container-high flex items-center justify-center shrink-0 mt-0.5 text-primary">
+<span class="material-symbols-outlined text-[18px]">calculate</span>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<div class="flex items-center justify-between gap-space-xs mb-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Topic 04 • 35 Mins</span>
+<span class="bg-surface-container-high text-primary px-2 py-0.5 rounded-full font-label-sm text-label-sm font-medium">4 Solved PYQs</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-semibold leading-snug">Integrated Rate Equations &amp; Half-Life</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5 truncate">Derivations for zero and first order, t₁/₂ relationships, linear plots.</p>
+</div>
+<span class="material-symbols-outlined topic-chevron text-on-surface-variant text-[20px] shrink-0 mt-1 transition-transform">expand_more</span>
+</button>
+<div class="topic-content hidden px-space-base pb-space-base pt-0 flex flex-col gap-space-sm">
+<div class="bg-surface-container-low rounded-lg p-space-sm flex flex-col gap-space-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium uppercase tracking-wide">Essential Standard Formulas</span>
+<div class="font-formula-md text-formula-md text-on-surface bg-surface p-space-xs rounded overflow-x-auto no-scrollbar flex flex-col gap-1">
+<div>k = (2.303 / t) • log₁₀([R]₀ / [R])</div>
+<div class="text-primary font-bold">t₁/₂ = 0.693 / k  (1st Order)</div>
+</div>
+</div>
+<div class="flex items-center justify-between pt-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Last Practiced 3 days ago</span>
+<a class="font-label-sm text-label-sm text-primary font-semibold flex items-center gap-0.5" href="#">
+<span>View 4 Solved PYQs</span>
+<span class="material-symbols-outlined text-[14px]">open_in_new</span>
+</a>
+</div>
+</div>
+</article>
+<!-- Topic 5: Arrhenius Equation -->
+<article class="topic-item bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden transition-all duration-200">
+<button aria-expanded="false" class="topic-toggle w-full p-space-base flex items-start text-left gap-space-sm focus:outline-none" type="button">
+<div class="w-7 h-7 rounded-full bg-surface-container flex items-center justify-center shrink-0 mt-0.5 text-secondary">
+<span class="material-symbols-outlined text-[18px]">local_fire_department</span>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<div class="flex items-center justify-between gap-space-xs mb-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Topic 05 • 30 Mins</span>
+<span class="bg-surface-container text-on-surface px-2 py-0.5 rounded-full font-label-sm text-label-sm font-medium">Key Formula</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-semibold leading-snug">Arrhenius Equation &amp; Activation Energy (Ea)</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5 truncate">Temperature dependence, collision theory, steric factor, Maxwell Boltzmann plot.</p>
+</div>
+<span class="material-symbols-outlined topic-chevron text-on-surface-variant text-[20px] shrink-0 mt-1 transition-transform">expand_more</span>
+</button>
+<div class="topic-content hidden px-space-base pb-space-base pt-0 flex flex-col gap-space-sm">
+<div class="bg-surface-container-low rounded-lg p-space-sm flex flex-col gap-space-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium uppercase tracking-wide">Two-Temperature Relation</span>
+<div class="font-formula-md text-formula-md text-on-surface bg-surface p-space-xs rounded overflow-x-auto no-scrollbar">
+            log(k₂/k₁) = (Ea / 2.303R) • [ (T₂ - T₁) / (T₁ • T₂) ]
+          </div>
+</div>
+<div class="flex items-center justify-between pt-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Includes Plot: ln k vs 1/T</span>
+<a class="font-label-sm text-label-sm text-primary font-semibold flex items-center gap-0.5" href="#">
+<span>Explore Graphs</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</a>
+</div>
+</div>
+</article>
+</main>
+<!-- Quick Action Floating Bar (Pinned above global navigation) -->
+<aside class="fixed bottom-16 inset-x-0 z-40 px-margin-mobile pb-space-xs pointer-events-none">
+<div class="max-w-md mx-auto pointer-events-auto bg-inverse-surface text-inverse-on-surface rounded-2xl p-space-xs shadow-xl flex items-center justify-between gap-space-xs">
+<button class="flex items-center gap-1.5 bg-surface-container-low/10 hover:bg-surface-container-low/20 text-inverse-on-surface px-3 py-2 rounded-xl transition-colors min-h-[44px]">
+<span class="material-symbols-outlined text-[18px]">download</span>
+<span class="font-label-sm text-label-sm font-semibold leading-tight">PDF (2.4MB)</span>
+</button>
+<button class="flex-1 flex items-center justify-center gap-1.5 bg-secondary-container text-on-secondary-container px-3.5 py-2 rounded-xl font-headline-sm text-headline-sm font-semibold shadow transition-transform active:scale-[0.98] min-h-[44px]">
+<span class="material-symbols-outlined text-[18px]">timer</span>
+<span class="font-label-md text-label-md">10-Min Diagnostic Quiz</span>
+</button>
+</div>
+</aside>
+</div>
+<script>
+  // Lightweight accordion toggle script with single micro-interaction overhead
+  document.querySelectorAll('.topic-toggle').forEach(function(button) {
+    button.addEventListener('click', function() {
+      const card = button.closest('.topic-item');
+      const content = card.querySelector('.topic-content');
+      const chevron = card.querySelector('.topic-chevron');
+      const isExpanded = button.getAttribute('aria-expanded') === 'true';
+
+      if (isExpanded) {
+        content.classList.add('hidden');
+        button.setAttribute('aria-expanded', 'false');
+        chevron.classList.remove('rotate-180');
+      } else {
+        content.classList.remove('hidden');
+        button.setAttribute('aria-expanded', 'true');
+        chevron.classList.add('rotate-180');
+      }
+    });
+  });
+</script></main><nav class="fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface/95 backdrop-blur-xl shadow-[0_-1px_8px_rgba(0,0,0,0.04)]" data-active-classes="text-primary font-semibold"><div class="flex justify-around items-center h-16 px-space-xs"><a class="flex flex-col items-center justify-center gap-0.5 min-w-[56px] min-h-[44px] text-on-surface-variant hover:text-primary transition-colors" data-path="curriculum" href="#"><span class="material-symbols-outlined text-[22px]">menu_book</span><span class="font-label-sm text-label-sm">Curriculum</span></a><a aria-current="page" class="flex flex-col items-center justify-center gap-0.5 min-w-[56px] min-h-[44px] transition-colors text-primary font-semibold" data-path="chapters" href="#"><span class="material-symbols-outlined text-[22px]">account_tree</span><span class="font-label-sm text-label-sm">Chapters</span></a><a class="flex flex-col items-center justify-center gap-0.5 min-w-[56px] min-h-[44px] text-on-surface-variant hover:text-primary transition-colors" data-path="quick-lookup" href="#"><span class="material-symbols-outlined text-[22px]">manage_search</span><span class="font-label-sm text-label-sm">Quick Lookup</span></a><a class="flex flex-col items-center justify-center gap-0.5 min-w-[56px] min-h-[44px] text-on-surface-variant hover:text-primary transition-colors" data-path="formulae" href="#"><span class="material-symbols-outlined text-[22px]">science</span><span class="font-label-sm text-label-sm">Formulae</span></a></div></nav></body></html>

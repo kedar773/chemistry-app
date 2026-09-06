@@ -1,0 +1,63 @@
+name: chemistry_cbse_app
+description: "Offline Chemistry Engine for CBSE, JEE & NEET by Kedar Krishna Sahoo"
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  flutter_riverpod: ^2.5.1
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  flutter_markdown: ^0.7.3
+  flutter_math_fork: ^0.7.2
+  flutter_svg: ^2.0.10+1
+  flutter_local_notifications: ^17.2.2
+  url_launcher: ^6.3.0
+  image_picker: ^1.1.2
+  path_provider: ^2.1.4
+  google_fonts: ^6.2.1
+  intl: ^0.19.0
+  markdown: ^7.2.2
+  timezone: ^0.9.4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/catalog.json
+    - assets/icons/
+    - assets/images/
+    - assets/images/diagrams/
+    - assets/quotes/
+    - assets/diagrams/vectors/
+    - assets/diagrams/structures/
+    - assets/content/files4/
+    - assets/content/chemistry_cbse/class_11/chemical_bonding_and_molecular_structure/
+    - assets/content/chemistry_cbse/class_11/chemical_thermodynamics/
+    - assets/content/chemistry_cbse/class_11/classification_of_elements/
+    - assets/content/chemistry_cbse/class_11/equilibrium/
+    - assets/content/chemistry_cbse/class_11/hydrocarbons/
+    - assets/content/chemistry_cbse/class_11/organic_chemistry_some_basic_principles/
+    - assets/content/chemistry_cbse/class_11/redox_reactions/
+    - assets/content/chemistry_cbse/class_11/some_basic_concepts_of_chemistry/
+    - assets/content/chemistry_cbse/class_11/structure_of_atom/
+    - assets/content/chemistry_cbse/class_12/alcohols_phenols_and_ethers/
+    - assets/content/chemistry_cbse/class_12/aldehydes_ketones_and_carboxylic_acids/
+    - assets/content/chemistry_cbse/class_12/amines/
+    - assets/content/chemistry_cbse/class_12/biomolecules/
+    - assets/content/chemistry_cbse/class_12/chemical_kinetics/
+    - assets/content/chemistry_cbse/class_12/coordination_compounds/
+    - assets/content/chemistry_cbse/class_12/d_and_f_block_elements/
+    - assets/content/chemistry_cbse/class_12/electrochemistry/
+    - assets/content/chemistry_cbse/class_12/haloalkanes_and_haloarenes/
+    - assets/content/chemistry_cbse/class_12/solutions/
+
