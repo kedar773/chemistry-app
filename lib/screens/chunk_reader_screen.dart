@@ -99,6 +99,9 @@ class _ChunkReaderScreenState extends ConsumerState<ChunkReaderScreen> {
     final rawData = await catalog.loadMarkdown(chunk.filePath);
     final sanitizedData = _sanitizeMarkdown(rawData);
 
+    // Track last read chunk for resume feature
+    ref.read(storageServiceProvider).setLastReadChunkId(chunk.id);
+
     // Find an inline question for concept check if available
     Question? q;
     final chQuestions = widget.chapter.questions;

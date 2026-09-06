@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../providers/app_providers.dart';
 import '../theme/app_colors.dart';
+import '../widgets/student_profile_sheet.dart';
 
 class TeacherProfileScreen extends ConsumerWidget {
   const TeacherProfileScreen({super.key});
@@ -252,6 +253,23 @@ class TeacherProfileScreen extends ConsumerWidget {
                 ),
               ],
             ),
+          ),
+          const SizedBox(height: 14),
+
+          // Student Progress & Reset Desk
+          ListTile(
+            tileColor: isDark ? AppColors.darkSurfaceHigh : AppColors.lightSurfaceHigh,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+              side: BorderSide(
+                color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+              ),
+            ),
+            leading: const Icon(Icons.manage_accounts_rounded, color: AppColors.amberPrimary),
+            title: const Text('Student Progress & Desk Settings', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13.5)),
+            subtitle: const Text('Adjust starting progress, switch class, or reset desk', style: TextStyle(fontSize: 11)),
+            trailing: const Icon(Icons.chevron_right_rounded),
+            onTap: () => StudentProfileSheet.show(context),
           ),
         ],
       ),

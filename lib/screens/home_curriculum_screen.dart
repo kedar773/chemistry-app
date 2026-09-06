@@ -7,6 +7,7 @@ import '../providers/app_providers.dart';
 import '../theme/app_colors.dart';
 import '../widgets/branch_meter.dart';
 import '../widgets/motivational_card.dart';
+import '../widgets/student_profile_sheet.dart';
 import 'chapter_detail_screen.dart';
 import 'chunk_reader_screen.dart';
 import 'global_search_screen.dart';
@@ -55,6 +56,9 @@ class _HomeCurriculumScreenState extends ConsumerState<HomeCurriculumScreen> {
     int inorgTotal = 0, inorgDone = 0;
     int orgTotal = 0, orgDone = 0;
 
+    final storage = ref.watch(storageServiceProvider);
+    final lastReadId = storage.getLastReadChunkId();
+
     Chunk? continueChunk;
     Chapter? continueChapter;
 
@@ -64,7 +68,9 @@ class _HomeCurriculumScreenState extends ConsumerState<HomeCurriculumScreen> {
         final isDone = completedChunkIds.contains(chunk.id);
         if (isDone) {
           completedCount++;
-        } else if (continueChunk == null) {
+        }
+
+        if (lastReadId != null && chunk.id == lastReadId && continueChunk == null) {
           continueChunk = chunk;
           continueChapter = ch;
         }
@@ -80,6 +86,26 @@ class _HomeCurriculumScreenState extends ConsumerState<HomeCurriculumScreen> {
           if (isDone) orgDone++;
         }
       }
+    }
+
+    // If lastReadId wasn't in current class, pick the first uncompleted chunk
+    if (continueChunk == null) {
+      for (final ch in currentClassChapters) {
+        for (final chunk in ch.chunks) {
+          if (!completedChunkIds.contains(chunk.id)) {
+            continueChunk = chunk;
+            continueChapter = ch;
+            break;
+          }
+        }
+        if (continueChunk != null) break;
+      }
+    }
+
+    // Fallback if all chunks are completed
+    if (continueChunk == null && currentClassChapters.isNotEmpty && currentClassChapters.first.chunks.isNotEmpty) {
+      continueChapter = currentClassChapters.first;
+      continueChunk = currentClassChapters.first.chunks.first;
     }
 
     final branchItems = [
@@ -107,15 +133,12 @@ class _HomeCurriculumScreenState extends ConsumerState<HomeCurriculumScreen> {
       backgroundColor: isDark ? AppColors.darkBg : AppColors.lightBg,
       appBar: AppBar(
         titleSpacing: 12,
-        title: Row(
-          children: [
-            GestureDetector(
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const TeacherProfileScreen()),
-                );
-              },
-              child: CircleAvatar(
+        title: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => StudentProfileSheet.show(context),
+          child: Row(
+            children: [
+              CircleAvatar(
                 radius: 17,
                 backgroundColor: isDark ? AppColors.darkSurfaceHigh : AppColors.lightSurfaceHigh,
                 backgroundImage: profile.avatarCustomPath != null
@@ -125,29 +148,42 @@ class _HomeCurriculumScreenState extends ConsumerState<HomeCurriculumScreen> {
                     ? Text(profile.avatarEmoji, style: const TextStyle(fontSize: 17))
                     : null,
               ),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    profile.name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    '${profile.targetExam} • Class $selectedClass',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 10.5),
-                  ),
-                ],
+              const SizedBox(width: 8),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            profile.name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        const SizedBox(width: 3),
+                        Icon(
+                          Icons.arrow_drop_down_rounded,
+                          size: 18,
+                          color: isDark ? AppColors.amberPrimary : AppColors.royalBlue,
+                        ),
+                      ],
+                    ),
+                    Text(
+                      '${profile.targetExam} • Class $selectedClass',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 10.5),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         actions: [
           // Streak pill
@@ -286,7 +322,7 @@ class _HomeCurriculumScreenState extends ConsumerState<HomeCurriculumScreen> {
           // Direct Focus Queue / Continue Reading
           if (continueChunk != null && continueChapter != null) ...[
             Text(
-              'CONTINUE REVISION',
+              completedCount == 0 ? 'START LEARNING' : 'CONTINUE REVISION',
               style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.bold,
@@ -313,8 +349,8 @@ class _HomeCurriculumScreenState extends ConsumerState<HomeCurriculumScreen> {
                       color: AppColors.amberPrimary.withValues(alpha: 0.15),
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(
-                      Icons.play_arrow_rounded,
+                    child: Icon(
+                      completedCount == 0 ? Icons.flag_rounded : Icons.play_arrow_rounded,
                       color: AppColors.amberPrimary,
                       size: 22,
                     ),
@@ -366,7 +402,7 @@ class _HomeCurriculumScreenState extends ConsumerState<HomeCurriculumScreen> {
                         ),
                       );
                     },
-                    child: const Text('Resume'),
+                    child: Text(completedCount == 0 ? 'Start' : 'Resume'),
                   ),
                 ],
               ),

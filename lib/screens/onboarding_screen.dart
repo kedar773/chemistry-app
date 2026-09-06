@@ -20,6 +20,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   String _selectedEmoji = '🧪';
   String? _customImagePath;
 
+  String _progressChoice = 'fresh'; // 'fresh', 'term1', 'revision', 'custom'
+  final Set<String> _customCompletedChapterSlugs = {};
+
   final List<String> _emojis = [
     '🧪', '⚗️', '🔬', '⚛️', '🧬', '🔥', '⚡', '🎯',
     '📚', '📖', '🎓', '💡', '✍️', '🚀', '🌟', '🏆',
@@ -31,6 +34,33 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     'JEE Main & Advanced',
     'NEET Medical',
     'CBSE + JEE/NEET',
+  ];
+
+  final List<Map<String, dynamic>> _progressOptions = [
+    {
+      'id': 'fresh',
+      'title': 'Beginner (0% — Starting from Scratch)',
+      'subtitle': 'Clean desk! Start from Chapter 1 with zero topics completed.',
+      'icon': Icons.flag_outlined,
+    },
+    {
+      'id': 'term1',
+      'title': 'Term 1 / Mid-Syllabus (~40% Complete)',
+      'subtitle': 'First 4-5 chapters already covered in school / coaching.',
+      'icon': Icons.timeline_rounded,
+    },
+    {
+      'id': 'revision',
+      'title': 'Advanced Revision (~80% Complete)',
+      'subtitle': 'Most theory covered; ready for rapid PYQs and mock tests.',
+      'icon': Icons.bolt_rounded,
+    },
+    {
+      'id': 'custom',
+      'title': 'Custom Selection (Pick Chapters)',
+      'subtitle': 'Manually select which chapters you have already studied.',
+      'icon': Icons.checklist_rounded,
+    },
   ];
 
   Future<void> _pickCustomAvatar() async {
@@ -63,8 +93,38 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           avatarCustomPath: _customImagePath,
         );
 
-    // Schedule notifications if quotes are available
+    // Save chosen starting progress
     final catalog = ref.read(catalogServiceProvider);
+    final chapters = catalog.getChaptersByClass(_selectedClass);
+    final chosenChunkIds = <String>{};
+
+    if (_progressChoice == 'term1') {
+      final count = (chapters.length * 0.4).ceil();
+      for (int i = 0; i < count; i++) {
+        for (final chunk in chapters[i].chunks) {
+          chosenChunkIds.add(chunk.id);
+        }
+      }
+    } else if (_progressChoice == 'revision') {
+      final count = (chapters.length * 0.8).ceil();
+      for (int i = 0; i < count; i++) {
+        for (final chunk in chapters[i].chunks) {
+          chosenChunkIds.add(chunk.id);
+        }
+      }
+    } else if (_progressChoice == 'custom') {
+      for (final ch in chapters) {
+        if (_customCompletedChapterSlugs.contains(ch.slug)) {
+          for (final chunk in ch.chunks) {
+            chosenChunkIds.add(chunk.id);
+          }
+        }
+      }
+    }
+
+    await ref.read(completedChunksProvider.notifier).setAll(chosenChunkIds);
+
+    // Schedule notifications if quotes are available
     if (catalog.quotes.isNotEmpty) {
       await ref.read(notificationServiceProvider).scheduleDailyReminders(catalog.quotes);
     }
@@ -340,6 +400,178 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   );
                 }).toList(),
               ),
+              const SizedBox(height: 24),
+
+              // Starting Progress Selector
+              Text(
+                'CHOOSE YOUR STARTING SYLLABUS PROGRESS',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 0.8,
+                  color: isDark ? AppColors.textMuted : AppColors.textSecondaryLight,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                'Tell us where you currently stand so your study desk and progress meters start accurately.',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: isDark ? AppColors.textMuted : AppColors.textSecondaryLight,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Column(
+                children: _progressOptions.map((opt) {
+                  final id = opt['id'] as String;
+                  final isSelected = _progressChoice == id;
+
+                  return GestureDetector(
+                    onTap: () => setState(() => _progressChoice = id),
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 10),
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: isSelected
+                            ? AppColors.amberPrimary.withValues(alpha: 0.12)
+                            : (isDark ? AppColors.darkSurfaceHigh : AppColors.lightSurfaceHigh),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: isSelected
+                              ? AppColors.amberPrimary
+                              : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                          width: isSelected ? 1.6 : 1,
+                        ),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Icon(
+                            opt['icon'] as IconData,
+                            color: isSelected ? AppColors.amberPrimary : (isDark ? AppColors.textMuted : AppColors.textSecondaryLight),
+                            size: 22,
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  opt['title'] as String,
+                                  style: TextStyle(
+                                    fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
+                                    fontSize: 13.5,
+                                    color: isDark ? AppColors.textParchment : AppColors.textPrimaryLight,
+                                  ),
+                                ),
+                                const SizedBox(height: 3),
+                                Text(
+                                  opt['subtitle'] as String,
+                                  style: TextStyle(
+                                    fontSize: 11.5,
+                                    color: isDark ? AppColors.textMuted : AppColors.textSecondaryLight,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Icon(
+                            isSelected ? Icons.radio_button_checked : Icons.radio_button_off,
+                            color: isSelected ? AppColors.amberPrimary : AppColors.textMuted,
+                            size: 20,
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+
+              // Custom chapter checklist if 'custom' selected
+              if (_progressChoice == 'custom') ...[
+                const SizedBox(height: 6),
+                Consumer(
+                  builder: (context, ref, _) {
+                    final catalog = ref.watch(catalogServiceProvider);
+                    final chapters = catalog.getChaptersByClass(_selectedClass);
+
+                    return Container(
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: AppColors.amberPrimary.withValues(alpha: 0.4),
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Class $_selectedClass Chapters (${_customCompletedChapterSlugs.length}/${chapters.length})',
+                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                              ),
+                              TextButton(
+                                style: TextButton.styleFrom(
+                                  visualDensity: VisualDensity.compact,
+                                  padding: EdgeInsets.zero,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    if (_customCompletedChapterSlugs.length == chapters.length) {
+                                      _customCompletedChapterSlugs.clear();
+                                    } else {
+                                      _customCompletedChapterSlugs.addAll(chapters.map((c) => c.slug));
+                                    }
+                                  });
+                                },
+                                child: Text(
+                                  _customCompletedChapterSlugs.length == chapters.length
+                                      ? 'Deselect All'
+                                      : 'Select All',
+                                  style: const TextStyle(fontSize: 12),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          ...chapters.map((ch) {
+                            final isChecked = _customCompletedChapterSlugs.contains(ch.slug);
+                            return CheckboxListTile(
+                              dense: true,
+                              contentPadding: EdgeInsets.zero,
+                              visualDensity: VisualDensity.compact,
+                              activeColor: AppColors.amberPrimary,
+                              checkColor: AppColors.darkBg,
+                              title: Text(ch.title, style: const TextStyle(fontSize: 13)),
+                              subtitle: Text(
+                                '${ch.branch} • ${ch.chunks.length} topics',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: isDark ? AppColors.textMuted : AppColors.textSecondaryLight,
+                                ),
+                              ),
+                              value: isChecked,
+                              onChanged: (val) {
+                                setState(() {
+                                  if (val == true) {
+                                    _customCompletedChapterSlugs.add(ch.slug);
+                                  } else {
+                                    _customCompletedChapterSlugs.remove(ch.slug);
+                                  }
+                                });
+                              },
+                            );
+                          }),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ],
               const SizedBox(height: 30),
               // Submit button
               SizedBox(

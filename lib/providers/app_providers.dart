@@ -48,6 +48,12 @@ class ProfileNotifier extends StateNotifier<StudentProfile> {
     state = updated;
     await _storage.saveProfile(updated);
   }
+
+  Future<void> resetProfile() async {
+    const fresh = StudentProfile();
+    state = fresh;
+    await _storage.saveProfile(fresh);
+  }
 }
 
 final profileProvider =
@@ -73,6 +79,16 @@ class CompletedChunksNotifier extends StateNotifier<Set<String>> {
       await _storage.markChunkCompleted(chunkId, completed: true);
       state = _storage.getCompletedChunkIds();
     }
+  }
+
+  Future<void> setAll(Set<String> chunkIds) async {
+    await _storage.setCompletedChunkIds(chunkIds);
+    state = _storage.getCompletedChunkIds();
+  }
+
+  Future<void> resetAll() async {
+    await _storage.setCompletedChunkIds({});
+    state = {};
   }
 }
 

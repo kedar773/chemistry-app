@@ -13,12 +13,21 @@ class StorageService {
   static const String _examPlansKey = 'exam_plans';
   static const String _themeModeKey = 'theme_mode';
   static const String _fontSizeKey = 'font_size_scale';
+  static const String _dbVersionKey = 'app_store_version_v1_0';
+  static const String _lastReadChunkKey = 'last_read_chunk_id';
 
   late Box _box;
 
   Future<void> init() async {
     await Hive.initFlutter();
     _box = await Hive.openBox(_boxName);
+
+    // If upgrading from a previous test/debug build without this version stamp,
+    // clear existing stale test progress so new installs start clean.
+    if (_box.get(_dbVersionKey) == null) {
+      await _box.clear();
+      await _box.put(_dbVersionKey, 1);
+    }
   }
 
   // --- Profile & Streak ---
@@ -83,8 +92,39 @@ class StorageService {
     await _box.put(_completedChunksKey, set.toList());
   }
 
+  Future<void> setCompletedChunkIds(Set<String> chunkIds) async {
+    await _box.put(_completedChunksKey, chunkIds.toList());
+  }
+
   bool isChunkCompleted(String chunkId) {
     return getCompletedChunkIds().contains(chunkId);
+  }
+
+  Future<void> setLastReadChunkId(String chunkId) async {
+    await _box.put(_lastReadChunkKey, chunkId);
+  }
+
+  String? getLastReadChunkId() {
+    final val = _box.get(_lastReadChunkKey);
+    return val is String ? val : null;
+  }
+
+  Future<void> resetAllData() async {
+    await _box.delete(_completedChunksKey);
+    await _box.delete(_bookmarkedChunksKey);
+    await _box.delete(_quizResultsKey);
+    await _box.delete(_examPlansKey);
+    await _box.delete(_lastReadChunkKey);
+    await _box.put(_profileKey, const StudentProfile().toJson());
+    await _box.put(_dbVersionKey, 1);
+  }
+
+  Future<void> resetProgressOnly() async {
+    await _box.delete(_completedChunksKey);
+    await _box.delete(_quizResultsKey);
+    await _box.delete(_examPlansKey);
+    await _box.delete(_bookmarkedChunksKey);
+    await _box.delete(_lastReadChunkKey);
   }
 
   // --- Bookmarks ---

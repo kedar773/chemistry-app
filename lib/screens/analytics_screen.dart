@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/app_providers.dart';
 import '../theme/app_colors.dart';
+import '../widgets/student_profile_sheet.dart';
 import 'chapter_detail_screen.dart';
 
 class AnalyticsScreen extends ConsumerWidget {
@@ -78,6 +79,13 @@ class AnalyticsScreen extends ConsumerWidget {
       backgroundColor: isDark ? AppColors.darkBg : AppColors.lightBg,
       appBar: AppBar(
         title: const Text('Performance & Mastery Analytics', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.tune_rounded, size: 20),
+            tooltip: 'Adjust Progress & Desk Settings',
+            onPressed: () => StudentProfileSheet.show(context),
+          ),
+        ],
       ),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 60),
