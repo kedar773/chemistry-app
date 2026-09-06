@@ -80,48 +80,13 @@ Students in Bhubaneswar can visit our offline teaching centers for classroom ses
 
 ---
 
-## 🚀 Building From Source
+## 📥 Download & Installation
 
-If you wish to build the application from source code:
+You can download the ready-to-install Android APK directly from the link below:
 
-### Prerequisites
-- Flutter SDK `^3.2.0` (Channel stable)
-- Android SDK (API 34+) & JDK 17
-- Git
-
-### Build Steps
-```bash
-# 1. Clone the repository
-git clone https://github.com/kedar773/chemistry-app.git
-cd chemistry-app
-
-# 2. Install dependencies
-flutter pub get
-
-# 3. Run analysis & test suite
-flutter analyze
-flutter test
-
-# 4. Build standalone release APK
-flutter build apk --release
-
-# 5. Build Google Play Store App Bundle (.aab)
-flutter build appbundle --release
-```
-
----
-
-## 📥 Downloads & Installation
-
-You can download the ready-to-install Android APK and offline asset archives directly from the links below:
-
-### Direct Download Links
-
-| Asset | Description | Size | Download Link |
+| Asset | Description | Size | Direct Download |
 | :--- | :--- | :--- | :--- |
 | **📱 Android Release APK** | Standalone installer for any Android phone (`v1.0.0`) | `63.6 MB` | [📥 **Download app-release.apk**](https://github.com/kedar773/chemistry-app/releases/download/v1.0.0/app-release.apk) |
-| **📦 Complete Notes & Assets Archive** | All offline markdown notes, diagrams, question banks, and catalog | `3.6 MB` | [📦 **Download chemistry-assets-v1.0.0.zip**](https://github.com/kedar773/chemistry-app/releases/download/v1.0.0/chemistry-assets-v1.0.0.zip) |
-| **🏷️ GitHub Releases Hub** | View release tags, checksums, and version history | — | [🌐 **Browse GitHub Releases (v1.0.0)**](https://github.com/kedar773/chemistry-app/releases/tag/v1.0.0) |
 
 ---
 
