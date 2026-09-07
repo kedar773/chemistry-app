@@ -7,7 +7,7 @@ import '../theme/app_colors.dart';
 
 /// Custom inline syntax to detect $$...$$ display math blocks
 class DisplayMathSyntax extends md.InlineSyntax {
-  DisplayMathSyntax() : super(r'(?<!\\)\$\$([^\$]+?)\$\$');
+  DisplayMathSyntax() : super(r'(?<!\\)\$\$([\s\S]+?)\$\$');
 
   @override
   bool onMatch(md.InlineParser parser, Match match) {
@@ -53,25 +53,30 @@ class InlineMathBuilder extends MarkdownElementBuilder {
 
     final style = (preferredStyle ?? baseStyle ?? const TextStyle()).copyWith(
       color: AppColors.amberPrimary,
-      fontWeight: FontWeight.w600,
+      fontWeight: preferredStyle?.fontWeight ?? FontWeight.w600,
     );
 
-    return FittedBox(
-      fit: BoxFit.scaleDown,
-      alignment: Alignment.centerLeft,
-      child: Math.tex(
-        text,
-        textStyle: style,
-        mathStyle: MathStyle.text,
-        onErrorFallback: (err) {
-          return Text(
+    return RichText(
+      text: WidgetSpan(
+        alignment: PlaceholderAlignment.middle,
+        baseline: TextBaseline.alphabetic,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 2.0),
+          child: Math.tex(
             text,
-            style: style.copyWith(
-              color: AppColors.amberGlow,
-              fontFamily: 'monospace',
-            ),
-          );
-        },
+            textStyle: style,
+            mathStyle: MathStyle.text,
+            onErrorFallback: (err) {
+              return Text(
+                text,
+                style: style.copyWith(
+                  color: AppColors.amberGlow,
+                  fontFamily: 'monospace',
+                ),
+              );
+            },
+          ),
+        ),
       ),
     );
   }
@@ -152,7 +157,7 @@ class MarkdownLatexView extends StatelessWidget {
     final baseFontSize = 15.5 * fontScale;
 
     final markdownStyle = MarkdownStyleSheet(
-      p: TextStyle(
+      p: GoogleFonts.spaceGrotesk(
         fontSize: baseFontSize,
         height: 1.6,
         color: textColor,
@@ -180,11 +185,11 @@ class MarkdownLatexView extends StatelessWidget {
         fontWeight: FontWeight.w600,
         color: mutedColor,
       ),
-      strong: TextStyle(
+      strong: GoogleFonts.spaceGrotesk(
         fontWeight: FontWeight.bold,
         color: isDark ? AppColors.amberGlow : AppColors.royalBlue,
       ),
-      em: const TextStyle(fontStyle: FontStyle.italic),
+      em: GoogleFonts.spaceGrotesk(fontStyle: FontStyle.italic),
       code: GoogleFonts.jetBrainsMono(
         fontSize: 13.5 * fontScale,
         backgroundColor: isDark ? AppColors.darkSurfaceHigh : AppColors.lightSurfaceHigh,
@@ -197,17 +202,20 @@ class MarkdownLatexView extends StatelessWidget {
           color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
         ),
       ),
-      blockquote: TextStyle(
+      blockquote: GoogleFonts.spaceGrotesk(
         fontSize: 14.5 * fontScale,
-        fontStyle: FontStyle.italic,
-        color: mutedColor,
+        fontStyle: FontStyle.normal,
+        color: textColor.withValues(alpha: 0.95),
+        height: 1.55,
       ),
+      blockquotePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       blockquoteDecoration: BoxDecoration(
-        color: isDark ? AppColors.darkSurfaceLow : AppColors.lightSurfaceHigh,
+        color: isDark ? AppColors.darkSurfaceHigh.withValues(alpha: 0.7) : AppColors.lightSurfaceHigh,
+        borderRadius: BorderRadius.circular(8),
         border: Border(
           left: BorderSide(
             color: isDark ? AppColors.amberPrimary : AppColors.royalBlue,
-            width: 3.5,
+            width: 4,
           ),
         ),
       ),
@@ -264,14 +272,55 @@ class MarkdownLatexView extends StatelessWidget {
 
   String _preprocessMath(String input) {
     // 1. Normalize carriage returns
-    var result = input.replaceAll('\r\n', '\n');
+    var result = input.replaceAll('\r\n', '\n').replaceAll('\r', '\n');
 
-    // 2. Collapse multiline display math $$ ... $$ to single-line $$ ... $$
-    // so DisplayMathSyntax can match it seamlessly without falling into broken paragraph text
+    // 2. Transform GitHub alert callout markers into rich styled callouts
     result = result.replaceAllMapped(
-      RegExp(r'\$\$\s*\n([\s\S]*?)\n\s*\$\$'),
+      RegExp(r'^(>\s*)\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]\s*', multiLine: true, caseSensitive: false),
       (match) {
-        final inner = match.group(1)!.trim();
+        final prefix = match.group(1)!;
+        final type = match.group(2)!.toUpperCase();
+        switch (type) {
+          case 'NOTE':
+            return '$prefix📌 **NOTE**  \n$prefix';
+          case 'TIP':
+            return '$prefix💡 **EXAMINER PRO-TIP**  \n$prefix';
+          case 'IMPORTANT':
+            return '$prefix⚡ **IMPORTANT / MUST-KNOW**  \n$prefix';
+          case 'WARNING':
+            return '$prefix⚠️ **EXAMINER WARNING**  \n$prefix';
+          case 'CAUTION':
+            return '$prefix🛑 **CAUTION / COMMON MISTAKE**  \n$prefix';
+          default:
+            return '$prefix📌 **$type**  \n$prefix';
+        }
+      },
+    );
+
+    // 3. Remove spaces between brackets/punctuation and inline math dollars to prevent line wrapping breaks
+    result = result.replaceAllMapped(
+      RegExp(r'([\(\[\{])\s+\$([^\$\n]+?)\$'),
+      (m) => '${m[1]}\$${m[2]}\$',
+    );
+    result = result.replaceAllMapped(
+      RegExp(r'\$([^\$\n]+?)\$\s+([\)\]\}])'),
+      (m) => '\$${m[1]}\$${m[2]}',
+    );
+    result = result.replaceAllMapped(
+      RegExp(r'\$([^\$\n]+?)\$\s+([,;.])'),
+      (m) => '\$${m[1]}\$${m[2]}',
+    );
+
+    // 4. Collapse multiline display math $$ ... $$ to single-line $$ ... $$
+    // and strip any blockquote prefix inside equations so blockquote math renders cleanly
+    result = result.replaceAllMapped(
+      RegExp(r'\$\$\s*([\s\S]*?)\s*\$\$'),
+      (match) {
+        final inner = match.group(1)!
+            .split('\n')
+            .map((l) => l.trim().replaceAll(RegExp(r'^>\s*'), ''))
+            .where((l) => l.isNotEmpty)
+            .join(' ');
         return '\n\n\$\$$inner\$\$\n\n';
       },
     );

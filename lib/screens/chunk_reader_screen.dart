@@ -106,10 +106,25 @@ class _ChunkReaderScreenState extends ConsumerState<ChunkReaderScreen> {
     Question? q;
     final chQuestions = widget.chapter.questions;
     if (chQuestions.isNotEmpty) {
-      final mcqs = chQuestions.where((item) => item.isMcq && item.options.isNotEmpty).toList();
-      if (mcqs.isNotEmpty) {
-        final index = (chunk.partNumber - 1) % mcqs.length;
-        q = mcqs[index];
+      // 1. Prioritize MCQs that belong directly to this chunk/topic
+      final chunkSpecificMcqs = chQuestions
+          .where((item) =>
+              item.id.contains(chunk.filename.replaceAll('.md', '')) &&
+              item.isMcq &&
+              item.options.length >= 2 &&
+              item.correctOption != null)
+          .toList();
+      if (chunkSpecificMcqs.isNotEmpty) {
+        q = chunkSpecificMcqs.first;
+      } else {
+        // 2. Otherwise pick from chapter-wide valid MCQs distributed across topics
+        final validMcqs = chQuestions
+            .where((item) => item.isMcq && item.options.length >= 2 && item.correctOption != null)
+            .toList();
+        if (validMcqs.isNotEmpty) {
+          final index = (chunk.partNumber > 0 ? chunk.partNumber - 1 : 0) % validMcqs.length;
+          q = validMcqs[index];
+        }
       }
     }
 
@@ -310,7 +325,7 @@ class _ChunkReaderScreenState extends ConsumerState<ChunkReaderScreen> {
 
                       // Inline Concept Check Widget
                       if (_inlineQuestion != null) ...[
-                        _buildConceptCheckWidget(isDark, _inlineQuestion!),
+                        _buildConceptCheckWidget(isDark, _inlineQuestion!, fontScale),
                         const SizedBox(height: 20),
                       ],
 
@@ -450,7 +465,11 @@ class _ChunkReaderScreenState extends ConsumerState<ChunkReaderScreen> {
     );
   }
 
-  Widget _buildConceptCheckWidget(bool isDark, Question q) {
+  Widget _buildConceptCheckWidget(bool isDark, Question q, double fontScale) {
+    final branchColor = widget.chapter.branch == 'Organic'
+        ? AppColors.branchOrganic
+        : (widget.chapter.branch == 'Inorganic' ? AppColors.branchInorganic : AppColors.branchPhysical);
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -480,20 +499,21 @@ class _ChunkReaderScreenState extends ConsumerState<ChunkReaderScreen> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                 decoration: BoxDecoration(
-                  color: AppColors.branchPhysical.withValues(alpha: 0.15),
+                  color: branchColor.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: Text(
                   q.tag,
-                  style: const TextStyle(fontSize: 9, color: AppColors.branchPhysical, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 9, color: branchColor, fontWeight: FontWeight.bold),
                 ),
               ),
             ],
           ),
           const SizedBox(height: 10),
-          Text(
-            q.question,
-            style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600),
+          MarkdownLatexView(
+            data: q.question,
+            fontScale: fontScale * 0.95,
+            shrinkWrap: true,
           ),
           const SizedBox(height: 12),
           // Options
@@ -540,11 +560,11 @@ class _ChunkReaderScreenState extends ConsumerState<ChunkReaderScreen> {
                 child: Row(
                   children: [
                     Expanded(
-                      child: Text(
-                        opt,
-                        style: TextStyle(
-                          fontSize: 12.5,
-                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                      child: IgnorePointer(
+                        child: MarkdownLatexView(
+                          data: opt,
+                          fontScale: fontScale * 0.88,
+                          shrinkWrap: true,
                         ),
                       ),
                     ),
@@ -576,14 +596,11 @@ class _ChunkReaderScreenState extends ConsumerState<ChunkReaderScreen> {
                     '💡 Examiner Notes & Solution:',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: AppColors.amberPrimary),
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    q.explanation,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: isDark ? AppColors.textParchment : AppColors.textPrimaryLight,
-                      height: 1.4,
-                    ),
+                  const SizedBox(height: 6),
+                  MarkdownLatexView(
+                    data: q.explanation,
+                    fontScale: fontScale * 0.88,
+                    shrinkWrap: true,
                   ),
                 ],
               ),

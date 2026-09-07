@@ -98,4 +98,65 @@ Here is inline math: \$P V = n R T\$.
     // Should not display literal '$'
     expect(find.text(r'$P V = n R T$'), findsNothing);
   });
+
+  testWidgets('MarkdownLatexView renders organic chemistry question and formula options seamlessly', (tester) async {
+    const qText = r'Which of the following alkyl halides undergoes $S_N1$ reaction most rapidly?';
+    const optA = r'(A) $\mathrm{CH_3CH_2Br}$';
+    const optB = r'(B) $\mathrm{(CH_3)_2CHBr}$';
+    const optC = r'(C) $\mathrm{(CH_3)_3CBr}$';
+    const expText = r'The rate-determining step produces tertiary carbocation $\mathrm{(CH_3)_3C^+}$, stabilized by $+I$ effect and 9 hyperconjugative $\alpha$-H atoms: $$\text{Stability: } 3^\circ > 2^\circ > 1^\circ > \mathrm{CH_3^+}$$';
+
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                MarkdownLatexView(data: qText, shrinkWrap: true),
+                MarkdownLatexView(data: optA, shrinkWrap: true),
+                MarkdownLatexView(data: optB, shrinkWrap: true),
+                MarkdownLatexView(data: optC, shrinkWrap: true),
+                MarkdownLatexView(data: expText, shrinkWrap: true),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
+    await tester.pumpAndSettle();
+    expect(find.byType(MarkdownLatexView), findsNWidgets(5));
+    // Verify no unparsed dollar signs are exposed as plain text
+    expect(find.text(r'$S_N1$'), findsNothing);
+    expect(find.text(r'$\mathrm{CH_3CH_2Br}$'), findsNothing);
+  });
+
+  testWidgets('MarkdownLatexView renders callout text boxes and preserves blockquote math cleanly', (tester) async {
+    const calloutMarkdown = '''
+> [!WARNING]
+> **Trap 1: Confusing Solution Mass with Solvent Mass**
+> The formula is given by:
+> \$\$
+> m = \\frac{n_{\\text{solute}}}{w_{\\text{solvent}}}
+> \$\$
+> Note that (\$w_{\\text{solvent}}\$) is in kilograms.
+''';
+
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(
+          body: SingleChildScrollView(
+            child: MarkdownLatexView(data: calloutMarkdown),
+          ),
+        ),
+      ),
+    );
+
+    await tester.pumpAndSettle();
+    expect(find.byType(MarkdownLatexView), findsOneWidget);
+    // Alert callout was converted with banner
+    expect(find.textContaining('EXAMINER WARNING'), findsOneWidget);
+    // Raw tag [!WARNING] is not displayed as raw text
+    expect(find.text('[!WARNING]'), findsNothing);
+  });
 }

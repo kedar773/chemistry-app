@@ -104,35 +104,60 @@ class CatalogService {
 
       // Match micro-chunks
       for (final chunk in chapter.chunks) {
+        final matchesNamedReaction = chunk.namedReactions.any((nr) => nr.toLowerCase().contains(cleanQuery));
         if (chunk.title.toLowerCase().contains(cleanQuery) ||
             chunk.snippet.toLowerCase().contains(cleanQuery) ||
-            chunk.formulas.any((f) => f.toLowerCase().contains(cleanQuery))) {
+            chunk.formulas.any((f) => f.toLowerCase().contains(cleanQuery)) ||
+            matchesNamedReaction) {
+          final subtitle = matchesNamedReaction
+              ? '${chapter.title} • 🏷️ ${chunk.namedReactions.firstWhere((nr) => nr.toLowerCase().contains(cleanQuery))}'
+              : '${chapter.title} • Part ${chunk.partNumber} • ~${chunk.estimatedMinutes} min';
           results.add({
             'type': 'chunk',
             'chapter': chapter,
             'chunk': chunk,
             'title': chunk.title,
-            'subtitle': '${chapter.title} • Part ${chunk.partNumber} • ~${chunk.estimatedMinutes} min',
+            'subtitle': subtitle,
           });
         }
       }
 
       // Match questions
       for (final q in chapter.questions) {
+        final matchesNamedReaction = q.namedReactions.any((nr) => nr.toLowerCase().contains(cleanQuery));
         if (q.question.toLowerCase().contains(cleanQuery) ||
-            q.tag.toLowerCase().contains(cleanQuery)) {
+            q.tag.toLowerCase().contains(cleanQuery) ||
+            q.explanation.toLowerCase().contains(cleanQuery) ||
+            matchesNamedReaction) {
+          final tagDisplay = matchesNamedReaction
+              ? '🏷️ ${q.namedReactions.firstWhere((nr) => nr.toLowerCase().contains(cleanQuery))}'
+              : q.tag;
           results.add({
             'type': 'question',
             'chapter': chapter,
             'question': q,
             'title': 'Q: ${q.question.length > 70 ? "${q.question.substring(0, 67)}..." : q.question}',
-            'subtitle': '${chapter.title} • ${q.tag} • ${q.marks} Mark${q.marks > 1 ? "s" : ""}',
+            'subtitle': '${chapter.title} • $tagDisplay • ${q.marks} Mark${q.marks > 1 ? "s" : ""}',
           });
         }
       }
     }
 
     return results;
+  }
+
+  List<String> getAllNamedReactions() {
+    final set = <String>{};
+    for (final ch in _chapters) {
+      for (final chunk in ch.chunks) {
+        set.addAll(chunk.namedReactions);
+      }
+      for (final q in ch.questions) {
+        set.addAll(q.namedReactions);
+      }
+    }
+    final list = set.toList()..sort();
+    return list;
   }
 
   Future<String> loadMarkdown(String assetPath) async {

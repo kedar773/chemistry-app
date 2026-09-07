@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/chapter.dart';
 import '../models/chunk.dart';
+import '../models/question.dart';
 import '../providers/app_providers.dart';
 import '../theme/app_colors.dart';
 import 'chapter_detail_screen.dart';
@@ -21,13 +22,24 @@ class _GlobalSearchScreenState extends ConsumerState<GlobalSearchScreen> {
   String _categoryFilter = 'All';
 
   final List<String> _quickTags = [
+    "Aldol Condensation",
+    "Cannizzaro Reaction",
+    "Reimer-Tiemann",
+    "Kolbe's Reaction",
+    "Williamson Synthesis",
+    "Clemmensen Reduction",
+    "Wolff-Kishner",
+    "Hoffmann Bromamide",
+    "Carbylamine Reaction",
+    "Diazotization",
+    "Swarts Reaction",
+    "Finkelstein",
+    "Sandmeyer",
+    "Etard Reaction",
+    "Rosenmund",
     "Raoult's Law",
     "Nernst Equation",
-    "Aldol Condensation",
-    "Hybridisation",
     "Gibbs Energy",
-    "Le Chatelier",
-    "Coordination",
   ];
 
   @override
@@ -48,6 +60,15 @@ class _GlobalSearchScreenState extends ConsumerState<GlobalSearchScreen> {
       if (_categoryFilter == 'Chapters') return item['type'] == 'chapter';
       if (_categoryFilter == 'Topics') return item['type'] == 'chunk';
       if (_categoryFilter == 'Questions') return item['type'] == 'question';
+      if (_categoryFilter == 'Named Reactions') {
+        if (item['type'] == 'chunk') {
+          return (item['chunk'] as Chunk).namedReactions.isNotEmpty;
+        }
+        if (item['type'] == 'question') {
+          return (item['question'] as Question).namedReactions.isNotEmpty;
+        }
+        return false;
+      }
       return true;
     }).toList();
 
@@ -84,7 +105,7 @@ class _GlobalSearchScreenState extends ConsumerState<GlobalSearchScreen> {
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Row(
-              children: ['All', 'Chapters', 'Topics', 'Questions'].map((cat) {
+              children: ['All', 'Named Reactions', 'Chapters', 'Topics', 'Questions'].map((cat) {
                 final isSelected = _categoryFilter == cat;
                 return Padding(
                   padding: const EdgeInsets.only(right: 8),

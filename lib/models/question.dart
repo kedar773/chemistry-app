@@ -12,6 +12,7 @@ class Question {
   final String explanation;
   final List<String> markingScheme;
   final String chapter;
+  final List<String> namedReactions;
 
   const Question({
     required this.id,
@@ -27,6 +28,7 @@ class Question {
     required this.explanation,
     required this.markingScheme,
     required this.chapter,
+    this.namedReactions = const [],
   });
 
   bool get isMcq => type == 'MCQ';
@@ -46,6 +48,7 @@ class Question {
       explanation: json['explanation'] as String? ?? '',
       markingScheme: (json['markingScheme'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
       chapter: json['chapter'] as String? ?? '',
+      namedReactions: (json['namedReactions'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? const [],
     );
   }
 
@@ -64,6 +67,7 @@ class Question {
       'explanation': explanation,
       'markingScheme': markingScheme,
       'chapter': chapter,
+      'namedReactions': namedReactions,
     };
   }
 }

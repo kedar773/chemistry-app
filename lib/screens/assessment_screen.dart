@@ -308,14 +308,46 @@ class _AssessmentScreenState extends ConsumerState<AssessmentScreen> {
             ],
           ),
           const SizedBox(height: 6),
-          Text(
-            q.tag,
-            style: TextStyle(
-              fontSize: 11,
-              fontStyle: FontStyle.italic,
-              color: isDark ? AppColors.amberGlow : AppColors.royalBlue,
-            ),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  q.tag,
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontStyle: FontStyle.italic,
+                    color: isDark ? AppColors.amberGlow : AppColors.royalBlue,
+                  ),
+                ),
+              ),
+            ],
           ),
+          if (q.namedReactions.isNotEmpty) ...[
+            const SizedBox(height: 6),
+            Wrap(
+              spacing: 6,
+              runSpacing: 4,
+              children: q.namedReactions.map((nr) => Container(
+                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                decoration: BoxDecoration(
+                  color: AppColors.amberPrimary.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(
+                    color: AppColors.amberPrimary.withValues(alpha: 0.4),
+                    width: 0.8,
+                  ),
+                ),
+                child: Text(
+                  '⚡ $nr',
+                  style: const TextStyle(
+                    fontSize: 10.5,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.amberPrimary,
+                  ),
+                ),
+              )).toList(),
+            ),
+          ],
           const SizedBox(height: 10),
 
           // Question Text
@@ -375,11 +407,11 @@ class _AssessmentScreenState extends ConsumerState<AssessmentScreen> {
                   child: Row(
                     children: [
                       Expanded(
-                        child: Text(
-                          opt,
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: isChosen ? FontWeight.bold : FontWeight.normal,
+                        child: IgnorePointer(
+                          child: MarkdownLatexView(
+                            data: opt,
+                            fontScale: fontScale * 0.88,
+                            shrinkWrap: true,
                           ),
                         ),
                       ),
@@ -456,6 +488,22 @@ class _AssessmentScreenState extends ConsumerState<AssessmentScreen> {
                       data: q.explanation,
                       fontScale: fontScale * 0.9,
                       shrinkWrap: true,
+                    )
+                  else if (q.correctOption != null)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      child: Text(
+                        'Correct Answer: (${q.correctOption!.toUpperCase()})',
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                      ),
+                    )
+                  else
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 4),
+                      child: Text(
+                        'Refer to detailed theory section and NCERT exemplar solutions.',
+                        style: TextStyle(fontStyle: FontStyle.italic, fontSize: 12),
+                      ),
                     ),
                   if (q.markingScheme.isNotEmpty) ...[
                     const SizedBox(height: 8),

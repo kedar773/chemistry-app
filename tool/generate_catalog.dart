@@ -46,6 +46,7 @@ void main(List<String> args) async {
       final chunks = <Map<String, dynamic>>[];
       final chapterQuestions = <Map<String, dynamic>>[];
       String? completeNotesPath;
+      int partIdx = 1;
 
       for (final file in mdFiles) {
         final filename = file.uri.pathSegments.last;
@@ -61,21 +62,32 @@ void main(List<String> args) async {
         final readTime = _estimateReadTime(content);
         final formulas = _extractFormulas(content);
 
+        // Derive partNumber from filename (e.g. 01_foo.md -> 1)
+        final partMatch = RegExp(r'^(\d+)_').firstMatch(filename);
+        final partNumber = partMatch != null ? int.parse(partMatch.group(1)!) : partIdx;
+        partIdx++;
+
         // Extract questions from this chunk
         final chunkQuestions = _parseQuestions(content, chTitle, slug, filename);
         chapterQuestions.addAll(chunkQuestions);
         totalQuestionsCount += chunkQuestions.length;
 
         final chunkId = '${slug}_${filename.replaceAll('.md', '')}';
+        final cleanFormulas = formulas.take(5).toList();
+        final chunkNamedReactions = _detectNamedReactions(content);
         chunks.add({
           'id': chunkId,
           'filename': filename,
           'title': chunkTitle,
           'filePath': relPath,
           'readTimeMinutes': readTime,
+          'estimatedMinutes': readTime,
+          'partNumber': partNumber,
           'formulaCount': formulas.length,
           'questionCount': chunkQuestions.length,
-          'sampleFormulas': formulas.take(5).toList(),
+          'sampleFormulas': cleanFormulas,
+          'formulas': cleanFormulas,
+          'namedReactions': chunkNamedReactions,
           'snippet': _extractSnippet(content),
         });
         totalChunksCount++;
@@ -233,13 +245,51 @@ int _estimateReadTime(String content) {
 
 List<String> _extractFormulas(String content) {
   final formulas = <String>[];
-  final regex = RegExp(r'\$([^\$]+)\$');
-  for (final m in regex.allMatches(content)) {
+
+  // 1. Single-line inline formulas $...$
+  final inlineRegex = RegExp(r'(?<!\$)(?<!\\)\$([^\$\n\r]+)\$(?!\$)');
+  for (final m in inlineRegex.allMatches(content)) {
     final f = m.group(1)?.trim();
-    if (f != null && f.length > 3 && !formulas.contains(f)) {
+    if (f != null &&
+        f.length >= 3 &&
+        f.length <= 120 &&
+        !f.contains('```') &&
+        !f.contains('###') &&
+        !f.contains('|') &&
+        !f.startsWith('**') &&
+        !formulas.contains(f)) {
+      if (f.contains('=') ||
+          f.contains(r'\frac') ||
+          f.contains(r'\to') ||
+          f.contains(r'\longrightarrow') ||
+          f.contains(r'\Delta') ||
+          f.contains(r'\rightleftharpoons') ||
+          f.contains('^') ||
+          f.contains('_') ||
+          f.contains('>') ||
+          f.contains('<') ||
+          f.contains(r'\mathrm') ||
+          f.contains(r'\text')) {
+        formulas.add(f);
+      }
+    }
+  }
+
+  // 2. Single-line display math $$...$$
+  final displayRegex = RegExp(r'\$\$([^\$\n\r]+?)\$\$');
+  for (final m in displayRegex.allMatches(content)) {
+    final f = m.group(1)?.trim();
+    if (f != null &&
+        f.length >= 3 &&
+        f.length <= 140 &&
+        !f.contains('```') &&
+        !f.contains('###') &&
+        !f.contains('|') &&
+        !formulas.contains(f)) {
       formulas.add(f);
     }
   }
+
   return formulas;
 }
 
@@ -259,83 +309,278 @@ String _extractSnippet(String content) {
   return bodyLines.length > 140 ? '${bodyLines.substring(0, 137)}...' : bodyLines;
 }
 
+final Map<String, RegExp> _namedReactionsMap = {
+  'Aldol Condensation': RegExp(r'\b(Aldol(?:\s+Condensation|\s+Addition)?|Cross-?Aldol)\b', caseSensitive: false),
+  'Cannizzaro Reaction': RegExp(r'\b(Cannizzaro(?:\x27s)?(?:\s+Reaction)?|Cross-?Cannizzaro)\b', caseSensitive: false),
+  'Clemmensen Reduction': RegExp(r'\bClemmensen(?:\x27s)?(?:\s+Reduction)?\b', caseSensitive: false),
+  'Wolff-Kishner Reduction': RegExp(r'\bWolff-?Kishner(?:\x27s)?(?:\s+Reduction)?\b', caseSensitive: false),
+  'Rosenmund Reduction': RegExp(r'\bRosenmund(?:\x27s)?(?:\s+Reduction)?\b', caseSensitive: false),
+  'Stephen Reaction': RegExp(r'\bStephen(?:\x27s)?(?:\s+Reaction|\s+Reduction)?\b', caseSensitive: false),
+  'Etard Reaction': RegExp(r'\b[EÉ]tard(?:\x27s)?(?:\s+Reaction)?\b', caseSensitive: false),
+  'Gattermann-Koch Reaction': RegExp(r'\bGattermann-?Koch\b', caseSensitive: false),
+  'Gattermann Reaction': RegExp(r'\bGattermann(?:\x27s)?(?:\s+Reaction)?\b', caseSensitive: false),
+  'Hell-Volhard-Zelinsky (HVZ) Reaction': RegExp(r'\b(Hell-?Volhard-?Zelinsky|HVZ)\b', caseSensitive: false),
+  'Tollens\' Test': RegExp(r'\b(Tollens(?:\x27s)?(?:\s+Test|\s+Reagent)?|Silver\s+Mirror\s+Test)\b', caseSensitive: false),
+  'Fehling\'s Test': RegExp(r'\bFehling(?:\x27s)?(?:\s+Test|\s+Solution)?\b', caseSensitive: false),
+  'Haloform / Iodoform Reaction': RegExp(r'\b(Haloform|Iodoform(?:\s+Test|\s+Reaction)?)\b', caseSensitive: false),
+  'Decarboxylation': RegExp(r'\bDecarboxylation\b', caseSensitive: false),
+  'Kolbe\'s Reaction': RegExp(r'\bKolbe(?:\x27s)?(?:\s+Reaction|\s+Synthesis|\s+Electrolysis|\s+Electrolytic)?\b', caseSensitive: false),
+  'Reimer-Tiemann Reaction': RegExp(r'\bReimer-?Tiemann\b', caseSensitive: false),
+  'Williamson Ether Synthesis': RegExp(r'\bWilliamson(?:\x27s)?(?:\s+Synthesis|\s+Ether\s+Synthesis)?\b', caseSensitive: false),
+  'Hydroboration-Oxidation': RegExp(r'\bHydroboration-?Oxidation\b', caseSensitive: false),
+  'Friedel-Crafts Reaction': RegExp(r'\bFriedel-?Crafts\b', caseSensitive: false),
+  'Finkelstein Reaction': RegExp(r'\bFinkelstein(?:\x27s)?(?:\s+Reaction)?\b', caseSensitive: false),
+  'Swarts Reaction': RegExp(r'\bSwarts(?:\x27s)?(?:\s+Reaction)?\b', caseSensitive: false),
+  'Sandmeyer Reaction': RegExp(r'\bSandmeyer(?:\x27s)?(?:\s+Reaction)?\b', caseSensitive: false),
+  'Balz-Schiemann Reaction': RegExp(r'\b(Balz-?Schiemann|Schiemann)\b', caseSensitive: false),
+  'Wurtz Reaction': RegExp(r'\bWurtz(?:\x27s)?(?:\s+Reaction)?\b', caseSensitive: false),
+  'Wurtz-Fittig Reaction': RegExp(r'\bWurtz-?Fittig\b', caseSensitive: false),
+  'Fittig Reaction': RegExp(r'\b(?<!Wurtz-)Fittig(?:\x27s)?(?:\s+Reaction)?\b', caseSensitive: false),
+  'Dow\'s Process': RegExp(r'\bDow(?:\x27s)?(?:\s+Process)?\b', caseSensitive: false),
+  'Gabriel Phthalimide Synthesis': RegExp(r'\bGabriel(?:\s+Phthalimide)?\b', caseSensitive: false),
+  'Hoffmann Bromamide Degradation': RegExp(r'\bHoffmann(?:\x27s)?\s+Bromamide\b', caseSensitive: false),
+  'Carbylamine Reaction': RegExp(r'\b(Carbylamine(?:\s+Reaction|\s+Test)?|Isocyanide\s+Test)\b', caseSensitive: false),
+  'Hinsberg\'s Test': RegExp(r'\bHinsberg(?:\x27s)?(?:\s+Test|\s+Reagent)?\b', caseSensitive: false),
+  'Diazotization Reaction': RegExp(r'\bDiazoti[sz]ation\b', caseSensitive: false),
+  'Azo Coupling Reaction': RegExp(r'\b(Azo\s+Coupling|Coupling\s+Reaction)\b', caseSensitive: false),
+  'Markovnikov\'s Rule': RegExp(r'\bMarko(?:v|w)niko(?:v|ff)(?:\x27s)?(?:\s+Rule)?\b', caseSensitive: false),
+  'Anti-Markovnikov\'s Rule': RegExp(r'\b(Anti-?Marko(?:v|w)niko(?:v|ff)|Kharasch\s+Effect|Peroxide\s+Effect)\b', caseSensitive: false),
+  'Ozonolysis': RegExp(r'\bOzonolysis\b', caseSensitive: false),
+  'Molisch\'s Test': RegExp(r'\bMolisch(?:\x27s)?(?:\s+Test)?\b', caseSensitive: false),
+  'Biuret Test': RegExp(r'\bBiuret(?:\s+Test)?\b', caseSensitive: false),
+  'Ninhydrin Test': RegExp(r'\bNinhydrin(?:\s+Test)?\b', caseSensitive: false),
+};
+
+List<String> _detectNamedReactions(String text) {
+  final list = <String>[];
+  for (final entry in _namedReactionsMap.entries) {
+    if (entry.value.hasMatch(text)) {
+      list.add(entry.key);
+    }
+  }
+  return list;
+}
+
 List<Map<String, dynamic>> _parseQuestions(String content, String chapterTitle, String chapterSlug, String filename) {
   final list = <Map<String, dynamic>>[];
-  // Matches:
-  // ### Question 1 [CBSE...]
-  // #### Q1. [CBSE...]
-  // ### Question A.1: Case-Based...
-  final qBlockRegex = RegExp(
-    r'#{3,4}\s+(?:Question|Q)\s*([A-Za-z0-9\.\-_]+)(?:[:\s]+)?(\[.*?\])?(.*?)(?=(#{3,4}\s+(?:Question|Q)\s*[A-Za-z0-9\.\-_]+|\Z))',
-    dotAll: true,
+  final lines = content.replaceAll('\r\n', '\n').replaceAll('\r', '\n').split('\n');
+
+  final qHeaderPattern = RegExp(
+    r'^#{3,4}\s+(?:\*\*)?(?:Question|Q\d*|Example|CASE-BASED|ASSERTION-REASON)',
     caseSensitive: false,
   );
-  final matches = qBlockRegex.allMatches(content);
 
-  for (final m in matches) {
-    final qNum = m.group(1) ?? '1';
-    String tag = (m.group(2) ?? '').replaceAll('[', '').replaceAll(']', '').trim();
-    final block = m.group(3) ?? '';
+  final solHeaderPattern = RegExp(
+    r'^(?:#{3,4}\s*|\*\*|\*+\s*)[^\n\r]*(?:Solution|Model\s+Answer|Explanation|Marking\s+Scheme)',
+    caseSensitive: false,
+  );
 
-    // If tag is not in header, look for **Tag:** [CBSE...]
-    if (tag.isEmpty) {
-      final tagMatch = RegExp(r'\*\*Tag:\*\*\s*\[(.*?)\]', caseSensitive: false).firstMatch(block);
-      if (tagMatch != null) {
-        tag = tagMatch.group(1)!.trim();
+  List<String>? currentBlock;
+  final blocks = <List<String>>[];
+
+  for (final line in lines) {
+    final trimmed = line.trim();
+    if (qHeaderPattern.hasMatch(trimmed)) {
+      if (trimmed.toLowerCase().contains('questions') ||
+          trimmed.toLowerCase().contains('direction') ||
+          trimmed.toLowerCase().contains('shortcuts') ||
+          trimmed.toLowerCase().contains('scales') ||
+          trimmed.toLowerCase().contains('evaluation') ||
+          trimmed.toLowerCase().contains('table') ||
+          trimmed.toLowerCase().contains('mnemonics') ||
+          trimmed.toLowerCase().contains('principles') ||
+          trimmed.toLowerCase().contains('deduction') ||
+          trimmed.toLowerCase().contains('quantization') ||
+          trimmed.toLowerCase().contains('reference')) {
+        continue;
+      }
+      if (currentBlock != null && currentBlock.isNotEmpty) {
+        blocks.add(currentBlock);
+      }
+      currentBlock = [line];
+    } else if (currentBlock != null) {
+      if (trimmed.startsWith('# SECTION') || (trimmed.startsWith('# ') && !trimmed.startsWith('###'))) {
+        blocks.add(currentBlock);
+        currentBlock = null;
       } else {
-        tag = 'CBSE Concept & PYQ';
+        currentBlock.add(line);
       }
     }
+  }
+  if (currentBlock != null && currentBlock.isNotEmpty) {
+    blocks.add(currentBlock);
+  }
 
-    final isMcq = block.contains('(a)') && block.contains('(b)');
-    final isPyq = tag.toLowerCase().contains('cbse') || tag.toLowerCase().contains('jee') || tag.toLowerCase().contains('neet');
-    final examType = tag.toLowerCase().contains('jee') ? 'JEE' : (tag.toLowerCase().contains('neet') ? 'NEET' : 'CBSE');
+  for (final b in blocks) {
+    if (b.isEmpty) continue;
+    final headerLine = b.first.trim();
+
+    // 1. Question Number
+    final qNumMatch = RegExp(r'(?:Question|Q|Example)\s*([A-Za-z0-9\.\-_]+)', caseSensitive: false).firstMatch(headerLine);
+    String qNum = qNumMatch?.group(1) ?? '${list.length + 1}';
+    qNum = qNum.replaceAll(RegExp(r'[^0-9A-Za-z\.]'), '');
+    if (qNum.isEmpty) qNum = '${list.length + 1}';
+
+    // 2. Tag & Marks
+    String tag = '';
+    final bracketMatch = RegExp(r'\[(.*?)\]').firstMatch(headerLine);
+    if (bracketMatch != null) {
+      tag = bracketMatch.group(1)!.trim();
+    }
+    if (tag.isEmpty) {
+      for (final l in b.skip(1).take(5)) {
+        final tm = RegExp(r'\*\*Tag:\*\*\s*\[(.*?)\]', caseSensitive: false).firstMatch(l);
+        if (tm != null) {
+          tag = tm.group(1)!.trim();
+          break;
+        }
+        final bm = RegExp(r'^\[(.*?)\]').firstMatch(l.trim());
+        if (bm != null) {
+          tag = bm.group(1)!.trim();
+          break;
+        }
+      }
+    }
+    if (tag.isEmpty) {
+      tag = 'CBSE Concept & PYQ';
+    }
 
     int marks = 1;
-    if (tag.contains('1 Mark')) marks = 1;
-    else if (tag.contains('2 Mark')) marks = 2;
-    else if (tag.contains('3 Mark')) marks = 3;
-    else if (tag.contains('4 Mark')) marks = 4;
-    else if (tag.contains('5 Mark')) marks = 5;
-    else if (block.toLowerCase().contains('case-based')) marks = 4;
+    final fullHeader = '$headerLine $tag';
+    if (fullHeader.contains('5 Mark')) marks = 5;
+    else if (fullHeader.contains('4 Mark')) marks = 4;
+    else if (fullHeader.contains('3 Mark')) marks = 3;
+    else if (fullHeader.contains('2 Mark')) marks = 2;
+    else if (fullHeader.contains('1 Mark')) marks = 1;
+    else if (b.join(' ').toLowerCase().contains('case-based')) marks = 4;
 
-    String questionText = '';
-    final qTextMatch = RegExp(r'\*\*Question:\*\*\s*(.*?)(?=(\n\([a-d]\)|\*\*Model Answer|\Z))', dotAll: true).firstMatch(block);
-    if (qTextMatch != null) {
-      questionText = qTextMatch.group(1)!.trim();
-    } else {
-      final passageMatch = RegExp(r'####\s*Passage:\s*(.*?)(?=(####\s*Model|\Z))', dotAll: true).firstMatch(block);
-      if (passageMatch != null) {
-        questionText = passageMatch.group(1)!.trim();
-      } else {
-        questionText = block.split('\n').where((l) => l.trim().isNotEmpty && !l.startsWith('*')).take(3).join(' ').trim();
+    // 3. Find where solution starts
+    int solIdx = -1;
+    for (int i = 1; i < b.length; i++) {
+      if (solHeaderPattern.hasMatch(b[i].trim())) {
+        solIdx = i;
+        break;
+      }
+    }
+    if (solIdx == -1) {
+      for (int i = 1; i < b.length; i++) {
+        if (RegExp(r'^\s*(?:\*+|\*\*|#+)?\s*(?:Correct\s+Option|Answer)\b', caseSensitive: false).hasMatch(b[i].trim())) {
+          solIdx = i;
+          break;
+        }
       }
     }
 
+    // 4. Question Text & Explanation lines
+    List<String> qLines;
+    List<String> solLines;
+    if (solIdx != -1) {
+      qLines = b.sublist(1, solIdx);
+      solLines = b.sublist(solIdx);
+    } else {
+      qLines = b.sublist(1);
+      solLines = [];
+    }
+
+    // Question text clean up
+    String rawQuestion = qLines.join('\n').trim();
+    rawQuestion = rawQuestion.replaceAll(RegExp(r'^\s*\[.*?\]\s*', multiLine: false), '').trim();
+    rawQuestion = rawQuestion.replaceAll(RegExp(r'^\s*\*\*Tag:\*\*.*?\n', caseSensitive: false), '').trim();
+    rawQuestion = rawQuestion.replaceAll(RegExp(r'^\s*\*\*Priority:\*\*.*?\n', caseSensitive: false), '').trim();
+    final qPromptMatch = RegExp(r'\*\*(?:Question|Prompt|Problem):\*\*\s*(.*)', dotAll: true, caseSensitive: false).firstMatch(rawQuestion);
+    if (qPromptMatch != null && qPromptMatch.group(1)!.trim().isNotEmpty) {
+      rawQuestion = qPromptMatch.group(1)!.trim();
+    }
+    rawQuestion = rawQuestion.replaceAll(RegExp(r'^[\*\s]*[⭐\s\|\[\]Must\-Know]+[\*\s]*'), '').trim();
+
+    // 5. Options extraction
     final options = <String>[];
     String? correctOption;
+
+    final fullBlockStr = b.join('\n');
+    final optMatches = RegExp(
+      r'(?:^|\n)\s*(?:-\s*)?\(([A-Da-d])\)\s*([^\n\r]+(?:\n(?!\s*(?:-\s*)?\([A-Da-d]\)|\s*(?:-\s*)?\*\*|\s*####|\s*#{1,4}\s|\s*\*\*Model|\s*\*+\s*Correct|\Z)[^\n\r]+)*)',
+      caseSensitive: false,
+    ).allMatches(fullBlockStr);
+
+    if (optMatches.length >= 3) {
+      for (final om in optMatches) {
+        final letter = om.group(1)!.toUpperCase();
+        final text = om.group(2)!.trim();
+        options.add('($letter) $text');
+      }
+    } else {
+      final inlineOptMatch = RegExp(
+        r'\(([a-dA-D])\)\s*([^(\n]+)\s+\(([a-dA-D])\)\s*([^(\n]+)\s+\(([a-dA-D])\)\s*([^(\n]+)(?:\s+\(([a-dA-D])\)\s*([^(\n]+))?',
+      ).firstMatch(fullBlockStr);
+      if (inlineOptMatch != null) {
+        options.add('(${inlineOptMatch.group(1)!.toUpperCase()}) ${inlineOptMatch.group(2)!.trim()}');
+        options.add('(${inlineOptMatch.group(3)!.toUpperCase()}) ${inlineOptMatch.group(4)!.trim()}');
+        options.add('(${inlineOptMatch.group(5)!.toUpperCase()}) ${inlineOptMatch.group(6)!.trim()}');
+        if (inlineOptMatch.group(7) != null) {
+          options.add('(${inlineOptMatch.group(7)!.toUpperCase()}) ${inlineOptMatch.group(8)!.trim()}');
+        }
+      }
+    }
+
+    // Extract correct option
+    final correctMatch = RegExp(
+      r'(?:Correct\s+(?:Option|Choice|Answer)|Answer)\b[\s\*:]*(?:\$\s*\\boxed\s*\{\s*\\text\s*\{\s*)?\(?([A-Da-d])\)?',
+      caseSensitive: false,
+    ).firstMatch(fullBlockStr);
+    if (correctMatch != null) {
+      correctOption = correctMatch.group(1)!.toLowerCase();
+    }
+
+    final isMcq = options.length >= 3 && (correctOption != null || marks == 1);
+
     if (isMcq) {
-      final optRegex = RegExp(r'\(([a-d])\)\s*(.*?)(?=(\n\([a-d]\)|\n\*\*Model Answer|\n\*+\s*Correct|\Z))', dotAll: true);
-      for (final opt in optRegex.allMatches(block)) {
-        options.add('(${opt.group(1)}) ${opt.group(2)!.trim()}');
-      }
-      final correctMatch = RegExp(r'\*+\s*Correct Option:\s*\*+\s*\*+\(?([a-d])\)?\*+', caseSensitive: false).firstMatch(block);
-      if (correctMatch != null) {
-        correctOption = correctMatch.group(1)!.toLowerCase();
-      }
+      rawQuestion = rawQuestion.split(RegExp(r'\n\s*(?:-\s*)?\([A-Da-d]\)')).first.trim();
     }
 
+    // 6. Explanation and marking scheme
     String explanation = '';
-    final expMatch = RegExp(r'\*+\s*(?:Explanation|Examiner Notes \/ Justification|Model Solution|Sub-part 1):\s*\*+\s*(.*?)(?=(\n\*+\s*CBSE Marking|\Z))', dotAll: true).firstMatch(block);
-    if (expMatch != null) {
-      explanation = expMatch.group(1)!.trim();
+    final markingPoints = <String>[];
+
+    if (solLines.isNotEmpty) {
+      final solContentLines = <String>[];
+      bool insideMarkingScheme = false;
+
+      for (int i = 0; i < solLines.length; i++) {
+        final l = solLines[i];
+        if (i == 0 && solHeaderPattern.hasMatch(l.trim())) {
+          final colonIdx = l.indexOf(':');
+          if (colonIdx != -1 && colonIdx < l.length - 1) {
+            final rest = l.substring(colonIdx + 1).trim();
+            if (rest.isNotEmpty) solContentLines.add(rest);
+          }
+          continue;
+        }
+
+        if (RegExp(r'^(?:#{3,4}\s*|\*\*|\*+\s*)(?:CBSE\s+)?(?:Step-)?Marking', caseSensitive: false).hasMatch(l.trim())) {
+          insideMarkingScheme = true;
+          continue;
+        }
+
+        if (insideMarkingScheme) {
+          final t = l.trim().replaceAll(RegExp(r'^\*+\s*'), '').replaceAll(RegExp(r'^-\s*'), '').trim();
+          if (t.isNotEmpty && t != '***') {
+            markingPoints.add(t);
+          }
+        } else {
+          solContentLines.add(l);
+        }
+      }
+
+      explanation = solContentLines.join('\n').trim();
+      explanation = explanation.replaceAll(RegExp(r'\n\*\*\*\s*$'), '').trim();
     }
 
-    final markingPoints = <String>[];
-    final markMatch = RegExp(r'\*+\s*CBSE Marking:\s*\*+\s*(.*?)$', multiLine: true).firstMatch(block);
-    if (markMatch != null) {
-      markingPoints.add(markMatch.group(1)!.trim());
-    }
+    // 7. Named Reactions detection
+    final qNamedReactions = _detectNamedReactions('$headerLine\n$rawQuestion\n$explanation');
+
+    final isPyq = tag.toLowerCase().contains('cbse') || tag.toLowerCase().contains('jee') || tag.toLowerCase().contains('neet');
+    final examType = tag.toLowerCase().contains('jee') ? 'JEE' : (tag.toLowerCase().contains('neet') ? 'NEET' : 'CBSE');
 
     list.add({
       'id': '${chapterSlug}_${filename.replaceAll('.md', '')}_q_$qNum',
@@ -345,11 +590,12 @@ List<Map<String, dynamic>> _parseQuestions(String content, String chapterTitle, 
       'isPyq': isPyq,
       'marks': marks,
       'type': isMcq ? 'MCQ' : (marks >= 4 ? 'CASE_BASED' : 'SUBJECTIVE'),
-      'question': questionText,
-      'options': options,
-      'correctOption': correctOption,
+      'question': rawQuestion,
+      'options': isMcq ? options : [],
+      'correctOption': isMcq ? correctOption : null,
       'explanation': explanation,
       'markingScheme': markingPoints,
+      'namedReactions': qNamedReactions,
       'chapter': chapterTitle,
     });
   }

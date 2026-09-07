@@ -7,6 +7,7 @@ class Chunk {
   final String snippet;
   final List<String> formulas;
   final int partNumber;
+  final List<String> namedReactions;
 
   const Chunk({
     required this.id,
@@ -17,6 +18,7 @@ class Chunk {
     required this.snippet,
     required this.formulas,
     required this.partNumber,
+    this.namedReactions = const [],
   });
 
   factory Chunk.fromJson(Map<String, dynamic> json) {
@@ -25,10 +27,14 @@ class Chunk {
       title: json['title'] as String? ?? '',
       filename: json['filename'] as String? ?? '',
       filePath: json['filePath'] as String? ?? '',
-      estimatedMinutes: json['estimatedMinutes'] as int? ?? 3,
+      estimatedMinutes: (json['estimatedMinutes'] ?? json['readTimeMinutes']) as int? ?? 3,
       snippet: json['snippet'] as String? ?? '',
-      formulas: (json['formulas'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
+      formulas: (json['formulas'] as List<dynamic>? ?? json['sampleFormulas'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [],
       partNumber: json['partNumber'] as int? ?? 1,
+      namedReactions: (json['namedReactions'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? const [],
     );
   }
 
@@ -42,6 +48,7 @@ class Chunk {
       'snippet': snippet,
       'formulas': formulas,
       'partNumber': partNumber,
+      'namedReactions': namedReactions,
     };
   }
 }
